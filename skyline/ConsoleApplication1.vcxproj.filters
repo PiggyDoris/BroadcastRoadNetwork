@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="原始程式檔">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="標頭檔">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="資源檔">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="原始程式檔\Component">
+      <UniqueIdentifier>{0035b82b-39c7-4518-9602-7826a4c46dbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="標頭檔\Component">
+      <UniqueIdentifier>{4a61e0de-1c00-4ee3-9e9a-12afbe762fcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="標頭檔\Component\Node">
+      <UniqueIdentifier>{7409c849-d8d0-4e61-af13-9d9b1666fd7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="原始程式檔\Component\Node">
+      <UniqueIdentifier>{0f7085ff-591e-49d1-a905-1c7cdf5d234f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="原始程式檔\ServerClient">
+      <UniqueIdentifier>{c5e01d1f-7f5b-4a1d-a0d8-a638f219c9ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="標頭檔\ServerClient">
+      <UniqueIdentifier>{d8844008-6689-49ef-824a-01f5642da090}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="PointComponent.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="skylineModel.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="mbrInfo.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Road.h">
+      <Filter>標頭檔\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Region.h">
+      <Filter>標頭檔\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>標頭檔\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>標頭檔\Component\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalIntersection.h">
+      <Filter>標頭檔\Component\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="Spot.h">
+      <Filter>標頭檔\Component\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection.h">
+      <Filter>標頭檔\Component\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="BorderNode.h">
+      <Filter>標頭檔\Component\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="EData.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="ListUDG.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>標頭檔\ServerClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>標頭檔\ServerClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Destination.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Bound.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="NPIClient.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="PointComponent.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="skylineModel.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="mbrInfo.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="Road.cpp">
+      <Filter>原始程式檔\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Region.cpp">
+      <Filter>原始程式檔\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>原始程式檔\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="BorderNode.cpp">
+      <Filter>原始程式檔\Component\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection.cpp">
+      <Filter>原始程式檔\Component\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalIntersection.cpp">
+      <Filter>原始程式檔\Component\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>原始程式檔\Component\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Spot.cpp">
+      <Filter>原始程式檔\Component\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="EData.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="ListUDG.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="Destination.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>原始程式檔\ServerClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>原始程式檔\ServerClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Bound.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="NPIClient.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
