@@ -66,6 +66,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		case 11:
 			model->precomputationIntegrate();
 			break;
+		case 13:
+			model->precomputationIntegrate_RNN();
+			break;
 		default:
 			break;
 		}

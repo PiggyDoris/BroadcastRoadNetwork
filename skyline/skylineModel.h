@@ -40,6 +40,7 @@ public:
 	double rad(double);
 
 	void precomputationIntegrate();
+	void precomputationIntegrate_RNN();
 	void copyOriginalData(string, string);
 	void writeGridPartition(string, string, int, int);
 	void writeAllBorderRoadDistance(string, string);

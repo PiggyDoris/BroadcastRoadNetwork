@@ -4176,7 +4176,7 @@ void skylineModel::writeRegionAllNodeBorderData(string inputDir, string outputDi
 	//_CrtDumpMemoryLeaks();
 }
 
-void skylineModel::precomputationIntegrate()
+void skylineModel::precomputationIntegrate_RNN()
 {
 	char line[SIZE];
 	int progressStep;
@@ -4561,6 +4561,393 @@ void skylineModel::precomputationIntegrate()
 	//cout << "BNN latency time : " << client->getLatencyDataSize() << endl;
 	//cout << "NPI latency time : " << npiclient->getLatencyDataSize() << endl;
 }
+
+void skylineModel::precomputationIntegrate()
+{
+	char line[SIZE];
+	int progressStep;
+	int spotNumber;
+	cout << endl << "Please enter outputfile name" << endl;
+	string outputDir;
+	cin >> outputDir;//輸出檔案
+	string outputFileDir;
+	outputFileDir = outputDir + "\\" + outputDir;
+
+	//建立資料夾
+	char a[50];
+	char b[] = ".\\";
+	strcpy(a, b);
+	strcat(a, outputDir.c_str());
+	_mkdir(a);
+
+	//讀取目前進度
+	fstream fgetprocess;
+	fgetprocess.open(outputFileDir + ".progress", ios::in);
+	while (fgetprocess.getline(line, sizeof(line), '\n'))
+	{
+		progressStep = atoi(line);
+		if (progressStep != 0)
+			cout << "-----------Step " << progressStep << " loaded, continue steps after.-----------" << endl;
+		break;
+	}
+	fgetprocess.close();
+
+
+	string fileDir;
+	string partitionSizeOption;
+	int part_x, part_y;
+	ofstream file;      //宣告fstream物件
+	clock_t nStart = clock(); // 開始時間
+
+	//若執行完Step 0, 執行Step 1
+	if (progressStep < 1)
+	{
+		cout << endl << "Please enter CITY_ROAD.geo" << endl;
+		cin >> fileDir;//輸入檔案
+		copyOriginalData(fileDir, outputFileDir + ".geo");
+
+		cout << endl << "Please enter Grid Partition size" << endl;
+		//cout << "0. 1*1 " << endl;
+		cout << "1. 2*2 " << endl;
+		cout << "2. 4*4 " << endl;
+		cout << "3. 8*8 " << endl;
+		cout << "4. 16*16 " << endl;
+		cin >> partitionSizeOption;//選擇格狀切歌大小
+
+		clock_t START, END;
+		START = clock();
+
+		//if (partitionSizeOption == "0")
+		//{
+		//	part_x = 1;
+		//	part_y = 1;
+		//	writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+		//}
+		if (partitionSizeOption == "1")
+		{
+			part_x = 2;
+			part_y = 2;
+			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+		}
+		else if (partitionSizeOption == "2")
+		{
+			part_x = 4;
+			part_y = 4;
+			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+		}
+		else if (partitionSizeOption == "3")
+		{
+			part_x = 8;
+			part_y = 8;
+			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+		}
+		else if (partitionSizeOption == "4")
+		{
+			part_x = 16;
+			part_y = 16;
+			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+		}
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "1" << endl;	//print progress
+		file.close();
+		cout << endl << "Process 1 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+
+	//若執行完Step 1, 執行Step 2
+	if (progressStep < 2)
+	{
+		clock_t START, END;
+		START = clock();
+
+		writeAllBorderRoadDistance(outputFileDir + ".bgeo", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "2" << endl;
+		file.close();
+		cout << "Process 2 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+
+	//若執行完Step 2, 執行Step 3
+	if (progressStep < 3)
+	{
+		clock_t START, END;
+		START = clock();
+
+		writeBorderRoadDistanceAndRegion(outputFileDir + ".bn", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "3" << endl;
+		file.close();
+		cout << "Process 3 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 4)
+	{
+		clock_t START, END;
+		START = clock();
+
+		//writeRegionBorderData(outputFileDir + ".bn", outputFileDir);
+		writeRegionAllNodeBorderData(outputFileDir + ".bnreg", outputFileDir);
+		writeOrderedIdRegionNodeData(outputFileDir + ".objreg", outputFileDir);
+		//writeRegionNodeData(outputFileDir + ".bn", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "4" << endl;
+		file.close();
+		cout << "Process 4 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 5)
+	{
+		clock_t START, END;
+		START = clock();
+
+		dijkstra(outputFileDir + ".bnreg", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "5" << endl;
+		file.close();
+		cout << "Process 5 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 6)
+	{
+		clock_t START, END;
+		START = clock();
+
+		writeBBDist(outputFileDir + ".bntable", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "6" << endl;
+		file.close();
+		cout << "Process 6 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 7)
+	{
+		clock_t START, END;
+		START = clock();
+
+		vector<int> nodeLineNumberList;
+		nodeLineNumberList = getNodeLineNumberListObjreg(outputFileDir + ".objreg");
+		cout << endl << "Totally " << nodeLineNumberList.size() << " spots" << endl;
+		cout << "Please enter spot number" << endl;
+		cin >> spotNumber;
+		writeRandomSpots(outputFileDir + ".objreg", outputFileDir, spotNumber);
+		Node* queryPoint = randQueryPoint(outputFileDir + ".objreg");
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "7" << endl;
+		file.close();
+		cout << "Process 7 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 8)
+	{
+		clock_t START, END;
+		START = clock();
+
+		fstream fin;
+		fin.open(outputFileDir + ".progress", ios::in);
+		char *pch;
+		char *delim = ",";
+		string nsProcessFlag = "";
+		int nsProcessCounter = 0;
+		int lineNumber = 0;
+		while (fin.getline(line, sizeof(line), '\n'))
+		{
+			pch = strtok(line, delim);
+			int attributeFlag = 0;
+			lineNumber++;
+			if (lineNumber == 2)
+			{
+				while (pch != NULL)
+				{
+					attributeFlag++;
+					if (attributeFlag == 1)
+						nsProcessFlag = pch;
+					else if (attributeFlag == 2)
+						nsProcessCounter = atoi(pch);
+					pch = strtok(NULL, delim);
+				}
+			}
+		}
+
+		if (nsProcessFlag == "")
+		{
+			nsProcessCounter = 0;
+			writeBNAndNNDist(outputFileDir + ".bntable", outputFileDir + ".objreg", outputFileDir + ".progress", outputFileDir, nsProcessCounter);
+			writeBNAndNSDist(outputFileDir + ".bntable", outputFileDir + ".objreg", outputFileDir + ".spot", outputFileDir + ".progress", outputFileDir, nsProcessCounter);
+		}
+		else if (nsProcessFlag == "bnnn")
+		{
+			writeBNAndNNDist(outputFileDir + ".bntable", outputFileDir + ".objreg", outputFileDir + ".progress", outputFileDir, nsProcessCounter);
+			nsProcessCounter = 0;
+			writeBNAndNSDist(outputFileDir + ".bntable", outputFileDir + ".objreg", outputFileDir + ".spot", outputFileDir + ".progress", outputFileDir, nsProcessCounter);
+		}
+		else if (nsProcessFlag == "bnns")
+		{
+			writeBNAndNSDist(outputFileDir + ".bntable", outputFileDir + ".objreg", outputFileDir + ".spot", outputFileDir + ".progress", outputFileDir, nsProcessCounter);
+		}
+
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "8" << endl;
+		file.close();
+		cout << "Process 8 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 9)
+	{
+		clock_t START, END;
+		START = clock();
+
+		writeRegionMaxLamdaDist(outputFileDir + ".bnns", outputFileDir + ".objreg", outputFileDir + ".bnnn", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "9" << endl;
+		file.close();
+		cout << "Process 9 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 10)
+	{
+		clock_t START, END;
+		START = clock();
+
+		writeAllMaxDistance(outputFileDir + ".maxld", outputFileDir + ".bn", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "10" << endl;
+		file.close();
+		cout << "Process 10 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 11)
+	{
+		clock_t START, END;
+		START = clock();
+
+		//writeBNNTable(outputFileDir + ".bntable", outputFileDir + ".objreg", outputFileDir + ".oobjreg", outputFileDir);
+		//writeNewBNNTable(outputFileDir + ".bntable", outputFileDir + ".objreg", outputFileDir + ".oobjreg", outputFileDir);
+		writeNewSpotBNNTable(outputFileDir + ".bnns", outputFileDir + ".objreg", outputFileDir);
+
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "10" << endl;
+		file.close();
+		cout << "Process 11 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 12)
+	{
+		clock_t START, END;
+		START = clock();
+
+		writeBorderList(outputFileDir + ".objreg", outputFileDir);
+		writeIndex(outputFileDir + ".bn", outputFileDir + ".maxld", outputFileDir + ".blist", outputFileDir + ".bnns", outputFileDir, 1);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "12" << endl;
+		file.close();
+		cout << "Process 12 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 13)
+	{
+		clock_t START, END;
+		START = clock();
+
+		writeNPIIndex(outputFileDir + ".bn", outputFileDir + ".bnns", outputFileDir);
+		writeMinMaxRR(outputFileDir + ".objreg", outputFileDir + ".bb", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "13" << endl;
+		file.close();
+		cout << "Process 13 Finished" << endl;
+
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+
+	vector<int> candidateRegionIdList;
+	candidateRegionIdList = getBNNTableInNLayers(outputFileDir + ".blist", 0, 2);
+	cout << endl;
+	for (int i = 0; i < candidateRegionIdList.size(); i++)
+		cout << candidateRegionIdList.at(i) << " ";
+	cout << endl;
+	candidateRegionIdList = getBNNTableInNLayers(outputFileDir + ".blist", 1, 1);
+	for (int i = 0; i < candidateRegionIdList.size(); i++)
+		cout << candidateRegionIdList.at(i) << " ";
+	cout << endl << endl;
+
+	//compute KNN
+	int queryAmountK;
+	cout << "Please enter the value of k" << endl;
+	cin >> queryAmountK;
+	int startRegionId = 0;
+	file.open(outputFileDir + "_" + to_string(queryAmountK) + ".ba", ios::app | ios::out);
+	file << "BroadcastCycle, TuningTime, Latency" << endl;
+	file.close();
+	file.open(outputFileDir + "_" + to_string(queryAmountK) + ".npi", ios::app | ios::out);
+	file << "BroadcastCycle, TuningTime, Latency" << endl;
+	file.close();
+	for (int i = 0; i < 10; i++)
+	{
+		Client* client = new Client();
+		client->computeKNNAnswer(outputFileDir + ".objreg", outputFileDir + ".index", outputFileDir + ".nbnntable", outputFileDir + ".bb", outputFileDir + ".blist", outputFileDir + ".maxdist", outputFileDir + ".bnns", outputFileDir + ".npirrmin", queryAmountK, startRegionId);
+		Node* queryPoint = client->getQueryPoint();
+		NPIClient* npiclient = new NPIClient();
+		npiclient->setQueryPoint(queryPoint);
+		npiclient->computeKNNAnswer(outputFileDir + ".objreg", outputFileDir + ".npiind", outputFileDir + ".npirrmin", outputFileDir + ".npirrmax", outputFileDir + ".maxdist", outputFileDir + ".bnns", queryAmountK, startRegionId);
+
+		file.open(outputFileDir + "_" + to_string(queryAmountK) + ".ba", ios::app | ios::out);
+		file << client->getBroadcastCycleSize() << "," << client->getTuningDataSize() << "," << client->getLatencyDataSize() << endl;
+		file.close();
+
+		file.open(outputFileDir + "_" + to_string(queryAmountK) + ".npi", ios::app | ios::out);
+		file << npiclient->getBroadcastCycleSize() << "," << npiclient->getTuningDataSize() << "," << npiclient->getLatencyDataSize() << endl;
+		file.close();
+	}
+
+	cout << "All Finished" << endl;
+	//cout << "BNN Result : " << endl;
+	//for (int i = 0; i < client->getQueryKNNList().size(); i++)
+	//{
+	//	cout << client->getQueryKNNList().at(i)->getNodeName() << endl;
+	//}
+	//cout << "NPI Result : " << endl;
+	//for (int i = 0; i < npiclient->getQueryKNNList().size(); i++)
+	//{
+	//	cout << npiclient->getQueryKNNList().at(i)->getNodeName() << endl;
+	//}
+
+	//cout << endl << "-------------------------------------------" << endl;
+	//cout << "Time Result : " << endl << endl;
+	//cout << "BNN broadcast cycle : " << client->getBroadcastCycleSize() << endl;
+	//cout << "NPI broadcast cycle : " << npiclient->getBroadcastCycleSize() << endl;
+	//cout << "----------------------------------" << endl;
+	//cout << "BNN tuning time : " << client->getTuningDataSize() << endl;
+	//cout << "NPI tuning time : " << npiclient->getTuningDataSize() << endl;
+	//cout << "----------------------------------" << endl;
+	//cout << "BNN latency time : " << client->getLatencyDataSize() << endl;
+	//cout << "NPI latency time : " << npiclient->getLatencyDataSize() << endl;
+}
+
 
 void skylineModel::copyOriginalData(string inputDir, string outputDir)
 {
