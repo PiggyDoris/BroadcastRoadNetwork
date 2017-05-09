@@ -4185,12 +4185,15 @@ void skylineModel::precomputationIntegrate_RNN()
 	string outputDir;
 	cin >> outputDir;//輸出檔案
 	string outputFileDir;
-	outputFileDir = outputDir + "\\" + outputDir;
+	string experimentalFolder = "experimental_RNN\\";
+	outputFileDir = experimentalFolder + outputDir + "\\" + outputDir;
 
 	//建立資料夾
 	char a[50];		
 	char b[] = ".\\";
 	strcpy(a, b);
+	strcat(a, experimentalFolder.c_str());
+	_mkdir(a);
 	strcat(a, outputDir.c_str());
 	_mkdir(a);
 
@@ -4571,12 +4574,15 @@ void skylineModel::precomputationIntegrate()
 	string outputDir;
 	cin >> outputDir;//輸出檔案
 	string outputFileDir;
-	outputFileDir = outputDir + "\\" + outputDir;
+	string experimentalFolder = "experimental_KNN\\";
+	outputFileDir = experimentalFolder + outputDir + "\\" + outputDir;
 
 	//建立資料夾
 	char a[50];
 	char b[] = ".\\";
 	strcpy(a, b);
+	strcat(a, experimentalFolder.c_str());
+	_mkdir(a);
 	strcat(a, outputDir.c_str());
 	_mkdir(a);
 

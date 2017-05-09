@@ -158,5 +158,8 @@ $RECYCLE.BIN/
 # experiment files
 skyline/experimentData/
 skyline/experimentResult/
+skyline/experimental_KNN/
+skyline/experimental_RNN/
 
-#
+
+
