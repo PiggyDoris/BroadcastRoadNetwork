@@ -27,6 +27,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "10. write SpotFile" << endl;
 		cout << endl << "11. Precomputation & kNN Search(BA & NPI)   <RECOMMENDED!!!!!>" << endl << endl;
 		cout << endl << "12. dijkstra" << endl;
+		cout << endl << "13. Precomputation & RNN Search(BA & ISW)   <RECOMMENDED!!!!!>" << endl << endl;
 		cout << "0. Exit."<<endl;
 		cout << "---------------------------------------------" << endl;
 		cout << "option:";

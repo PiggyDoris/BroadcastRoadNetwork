@@ -4221,7 +4221,7 @@ void skylineModel::precomputationIntegrate_RNN()
 	{
 		cout << endl << "Please enter CITY_ROAD.geo" << endl;
 		cin >> fileDir;//輸入檔案
-		copyOriginalData(fileDir, outputFileDir + ".geo");
+		copyOriginalData("experimentData\\"+fileDir, outputFileDir + ".geo");
 
 		cout << endl << "Please enter Grid Partition size" << endl;
 		//cout << "0. 1*1 " << endl;
@@ -4244,25 +4244,25 @@ void skylineModel::precomputationIntegrate_RNN()
 		{
 			part_x = 2;
 			part_y = 2;
-			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+			writeGridPartition(outputFileDir + ".geo", outputFileDir, part_x, part_y);
 		}
 		else if (partitionSizeOption == "2")
 		{
 			part_x = 4;
 			part_y = 4;
-			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+			writeGridPartition(outputFileDir + ".geo", outputFileDir, part_x, part_y);
 		}
 		else if (partitionSizeOption == "3")
 		{
 			part_x = 8;
 			part_y = 8;
-			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+			writeGridPartition(outputFileDir + ".geo", outputFileDir, part_x, part_y);
 		}
 		else if (partitionSizeOption == "4")
 		{
 			part_x = 16;
 			part_y = 16;
-			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+			writeGridPartition(outputFileDir + ".geo", outputFileDir, part_x, part_y);
 		}
 		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
 		file << "1" << endl;	//print progress
@@ -4610,7 +4610,7 @@ void skylineModel::precomputationIntegrate()
 	{
 		cout << endl << "Please enter CITY_ROAD.geo" << endl;
 		cin >> fileDir;//輸入檔案
-		copyOriginalData(fileDir, outputFileDir + ".geo");
+		copyOriginalData("experimentData\\" + fileDir, outputFileDir + ".geo");
 
 		cout << endl << "Please enter Grid Partition size" << endl;
 		//cout << "0. 1*1 " << endl;
@@ -4633,25 +4633,25 @@ void skylineModel::precomputationIntegrate()
 		{
 			part_x = 2;
 			part_y = 2;
-			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+			writeGridPartition(outputFileDir + ".geo", outputFileDir, part_x, part_y);
 		}
 		else if (partitionSizeOption == "2")
 		{
 			part_x = 4;
 			part_y = 4;
-			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+			writeGridPartition(outputFileDir + ".geo", outputFileDir, part_x, part_y);
 		}
 		else if (partitionSizeOption == "3")
 		{
 			part_x = 8;
 			part_y = 8;
-			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+			writeGridPartition(outputFileDir + ".geo", outputFileDir, part_x, part_y);
 		}
 		else if (partitionSizeOption == "4")
 		{
 			part_x = 16;
 			part_y = 16;
-			writeGridPartition(fileDir, outputFileDir, part_x, part_y);
+			writeGridPartition(outputFileDir + ".geo", outputFileDir, part_x, part_y);
 		}
 		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
 		file << "1" << endl;	//print progress
@@ -4967,11 +4967,12 @@ void skylineModel::copyOriginalData(string inputDir, string outputDir)
 	fin.open(inputDir, ios::in);
 	file.open(outputDir, ios::out | ios::binary);		//開啟檔案為輸出狀態，若檔案已存在則清除檔案內容重新寫入
 	clock_t nStart = clock(); // 開始時間
-
+	//cout << "copyOriginalData ...";
 	//以行讀取
 	while (fin.getline(line, sizeof(line), '\n'))
 	{
 		lineNumber++;
+	//	cout << "reading...";
 	}
 	fin.close();
 
