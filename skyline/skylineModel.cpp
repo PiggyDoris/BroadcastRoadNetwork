@@ -4490,7 +4490,7 @@ void skylineModel::precomputationIntegrate_RNN()
 		clock_t START, END;
 		START = clock();
 
-		writeNPIIndex(outputFileDir + ".bn", outputFileDir + ".bnns", outputFileDir);
+		//writeNPIIndex(outputFileDir + ".bn", outputFileDir + ".bnns", outputFileDir);
 		writeMinMaxRR(outputFileDir + ".objreg", outputFileDir + ".bb", outputFileDir);
 		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
 		file << "13" << endl;
@@ -4512,33 +4512,34 @@ void skylineModel::precomputationIntegrate_RNN()
 		cout << candidateRegionIdList.at(i) << " ";
 	cout << endl << endl;
 
-	//compute KNN
-	int queryAmountK;
-	cout << "Please enter the value of k" << endl;
-	cin >> queryAmountK;
+	//compute RNN
+
+	//int queryAmountK;
+	//cout << "Please enter the value of k" << endl;
+	//cin >> queryAmountK;
 	int startRegionId = 0;
-	file.open(outputFileDir + "_" + to_string(queryAmountK) + ".ba", ios::app | ios::out);
+	file.open(outputFileDir + ".ba", ios::app | ios::out);
 	file << "BroadcastCycle, TuningTime, Latency" << endl;
 	file.close();
-	file.open(outputFileDir + "_" + to_string(queryAmountK) + ".npi", ios::app | ios::out);
-	file << "BroadcastCycle, TuningTime, Latency" << endl;
-	file.close();
+	//file.open(outputFileDir + "_" + to_string(queryAmountK) + ".npi", ios::app | ios::out);
+	//file << "BroadcastCycle, TuningTime, Latency" << endl;
+	//file.close();
 	for (int i = 0; i < 10; i++)
 	{
-		Client* client = new Client();
-		client->computeKNNAnswer(outputFileDir + ".objreg", outputFileDir + ".index", outputFileDir + ".nbnntable", outputFileDir + ".bb", outputFileDir + ".blist", outputFileDir + ".maxdist", outputFileDir + ".bnns", outputFileDir + ".npirrmin", queryAmountK, startRegionId);
-		Node* queryPoint = client->getQueryPoint();
-		NPIClient* npiclient = new NPIClient();
-		npiclient->setQueryPoint(queryPoint);
-		npiclient->computeKNNAnswer(outputFileDir + ".objreg", outputFileDir + ".npiind", outputFileDir + ".npirrmin", outputFileDir + ".npirrmax", outputFileDir + ".maxdist", outputFileDir + ".bnns", queryAmountK, startRegionId);
+		ClientRNN* clientRNN = new ClientRNN();
+		clientRNN->computeRNNAnswer(outputFileDir + ".objreg", outputFileDir + ".index", outputFileDir + ".nbnntable", outputFileDir + ".bb", outputFileDir + ".blist", outputFileDir + ".maxdist", outputFileDir + ".bnns", outputFileDir + ".npirrmin", startRegionId);
+		Node* queryPoint = clientRNN->getQueryPoint();
+		//NPIClient* npiclient = new NPIClient();
+		//npiclient->setQueryPoint(queryPoint);
+		//npiclient->computeKNNAnswer(outputFileDir + ".objreg", outputFileDir + ".npiind", outputFileDir + ".npirrmin", outputFileDir + ".npirrmax", outputFileDir + ".maxdist", outputFileDir + ".bnns", queryAmountK, startRegionId);
 
-		file.open(outputFileDir + "_" + to_string(queryAmountK) + ".ba", ios::app | ios::out);
-		file << client->getBroadcastCycleSize() << "," << client->getTuningDataSize() << "," << client->getLatencyDataSize() << endl;
+		file.open(outputFileDir + ".ba", ios::app | ios::out);
+		file << clientRNN->getBroadcastCycleSize() << "," << clientRNN->getTuningDataSize() << "," << clientRNN->getLatencyDataSize() << endl;
 		file.close();
 
-		file.open(outputFileDir + "_" + to_string(queryAmountK) + ".npi", ios::app | ios::out);
-		file << npiclient->getBroadcastCycleSize() << "," << npiclient->getTuningDataSize() << "," << npiclient->getLatencyDataSize() << endl;
-		file.close();
+		//file.open(outputFileDir + "_" + to_string(queryAmountK) + ".npi", ios::app | ios::out);
+		//file << npiclient->getBroadcastCycleSize() << "," << npiclient->getTuningDataSize() << "," << npiclient->getLatencyDataSize() << endl;
+		//file.close();
 	}
 
 	cout << "All Finished" << endl;

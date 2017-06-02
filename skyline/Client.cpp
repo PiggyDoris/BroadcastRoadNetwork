@@ -443,6 +443,7 @@ void Client::listenBroadcastIndex(string inputDir, string inputDir1, string inpu
 			while (pch != NULL)
 			{
 				allRegionList.at(lineNumber - 1)->setMinRRDist(atoi(pch));
+				cout <<"print : "<<atoi(pch) << endl;
 				pch = strtok(NULL, delim);
 			}
 		}
@@ -774,6 +775,10 @@ void Client::computeUpperBound()
 			ubListInd++;
 		}
 		upperBound = regUpperBound;
+	}
+	//region spot amount
+	for (int i = 0; i < allRegionList.size(); i++){
+		cout<<"Region : "<<i<<"Spot Amount : "<<allRegionNodeAmount.at(i)<<endl;
 	}
 	cout << "upper bound : " << upperBound << endl;
 	for (int i = 0; i < upperBoundList.size(); i++)

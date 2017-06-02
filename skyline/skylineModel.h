@@ -8,6 +8,7 @@
 #include "Region.h"
 #include "BorderNode.h"
 #include "Client.h"
+#include "ClientRNN.h"
 #include "NPIClient.h"
 #include <direct.h>
 #include <fstream>

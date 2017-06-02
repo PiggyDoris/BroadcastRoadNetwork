@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Bound.h"
 
-
 Bound::Bound()
 {
 }
@@ -10,7 +9,6 @@ Bound::Bound(string boundType)
 {
 	this->boundType = boundType;
 }
-
 
 Bound::~Bound()
 {
@@ -46,6 +44,11 @@ int Bound::getQueryRegionId()
 	return queryRegionId;
 }
 
+void Bound::setStartPointRegionId(int startPointRegionId)
+{
+	this->startPointRegionId = startPointRegionId;
+}
+
 void Bound::setDestinationRegionId(int destinationRegionId)
 {
 	this->destinationRegionId = destinationRegionId;
@@ -74,6 +77,11 @@ void Bound::setQueryRegion(Region* queryRegion)
 Region* Bound::getQueryRegion()
 {
 	return queryRegion;
+}
+
+void Bound::setStartPointRegion(Region* startPointRegion)
+{
+	this->startPointRegion = startPointRegion;
 }
 
 void Bound::setDestinationRegion(Region* destinationRegion)
