@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ClientRNN.h"
+#include <algorithm>
 
 #define _CRTDBG_MAP_ALLOC 
 #define SIZE 100000
@@ -1156,66 +1157,8 @@ void ClientRNN::computeCandidateRegion(){
 	for (int i = 0; i < candidateRegionList.size(); i++){
 		candidateRegionIdList.push_back(candidateRegionList.at(i)->getId());
 	}
-	//if (firstComputeCandidateFlag == true)
-	//{
-	//	for (int i = 0; i < lowerBoundList.size(); i++)
-	//	{
-	//		int regDestinationRegionId = lowerBoundList.at(i)->getDestinationRegion()->getId();
-	//		if (lowerBoundList.at(i)->getUpperBound() != -1 && lowerBoundList.at(i)->getUpperBound() < upperBound/* && allRegionSpotAmount.at(regDestinationRegionId) != 0*/)
-	//			candidateRegionIdList.push_back(lowerBoundList.at(i)->getDestinationRegionId());
-	//	}
-	//}
-	//else
-	//{
-	//	//Update, erase
-	//	//if region in candidateList, it's lower bound > upper bound, erase this region from candidate
-	//	for (int i = 0; i < candidateRegionIdList.size(); i++)
-	//	{
-	//		for (int j = 0; j < lowerBoundList.size(); j++)
-	//		{
-	//			if (lowerBoundList.at(j)->getUpperBound() > upperBound && candidateRegionIdList.at(i) == lowerBoundList.at(j)->getDestinationRegionId())
-	//			{
-	//				if (lowerBoundList.at(j)->getUpperBound() != -1)
-	//				{
-	//					candidateRegionIdList.erase(candidateRegionIdList.begin() + i);
-	//					break;
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-
-	////get toListenCandidateList
-	//candidateRegionToListenList = candidateRegionIdList;
-	//for (int i = 0; i < recievedRegionList.size(); i++)
-	//{
-	//	for (int j = 0; j < candidateRegionToListenList.size(); j++)
-	//	{
-	//		if (recievedRegionList.at(i) == candidateRegionToListenList.at(j))
-	//		{
-	//			candidateRegionToListenList.erase(candidateRegionToListenList.begin() + j);
-	//			break;
-	//		}
-	//	}
-	//}
-
-	////get now recieved node amount
-	//nowRecievedNodeAmount = 0;
-	//recievedCandidateRegionIdList.clear();
-	//for (int i = 0; i < recievedRegionList.size(); i++)
-	//{
-	//	for (int j = 0; j < candidateRegionIdList.size(); j++)
-	//	{
-	//		if (recievedRegionList.at(i) == candidateRegionIdList.at(j))
-	//		{
-	//			nowRecievedNodeAmount += allRegionSpotAmount.at(candidateRegionIdList.at(j));
-	//			recievedCandidateRegionIdList.push_back(candidateRegionIdList.at(j));
-	//		}
-	//	}
-	//}
-
+	candidateRegionToListenList = candidateRegionIdList;
 	firstComputeCandidateFlag = false;
-
 	cout << endl;
 	cout << "Query Region R" << queryPoint->getNodeRegionId() << endl;
 	//cout << "Now Broadcast R" << startRegionId << endl;
@@ -1473,133 +1416,97 @@ void ClientRNN::computeDelta()
 }
 
 //compute whoes 1NN Answer include Query  
-void ClientRNN::computeKNNAnswer(){
-	//if candidateList.spot(R_i) 1NN = queryPoint q
-	//RNN_AnswerList.enqueue(R_i)
-	bool queryRegionRecievedFlag = false;
-	//processFlag to know which process step right now & judge 
-	if (processFlag == 0)
-	{
-		if (queryPoint == NULL)
-			//getRandQueryPoint(inputDir);//get query point from obj
-		//this->queryAmountK = queryAmountK; //KNN client use
-		this->startRegionId = startRegionId;
-		processFlag = 1;
-	}
-	
-
-	//if dijkstra not compute before, do dijkstra
-	if (queryFinishedFlag == false)
-	{
-		computeToQueryDijkstra();
-		queryFinishedFlag = true;
-	}
-
-	if (this->startRegionId == 0)
-	{
-		//latencyDataSize = computeIndexLatencySize(inputDir2, inputDir1, startRegionId, allRegionList.size() - 1);
-		//latencyDataSize += computeDataLatencySize(inputDir6, startRegionId, allRegionList.size() - 1);
-	}
-	else
-	{
-		//latencyDataSize = computeIndexLatencySize(inputDir2, inputDir1, startRegionId, this->startRegionId - 1);
-		//latencyDataSize += computeDataLatencySize(inputDir6, startRegionId, this->startRegionId - 1);
-	}
-	//broadcastCycleSize = computeIndexLatencySize(inputDir2, inputDir1, 0, allRegionList.size() - 1);
-	//broadcastCycleSize += computeDataLatencySize(inputDir6, 0, allRegionList.size() - 1);
-
-	cout << endl << "///////////////////////////" << endl;
-	cout << "BNN Recieved Region : " << endl;
-	for (int i = 0; i < recievedRList.size(); i++)
-		cout << "R" << recievedRList.at(i) << endl;
-
-	cout << endl;
-	cout << "Query Point : " << queryPoint->getNodeName() << ", R" << queryPoint->getNodeRegionId() << endl;
-	cout << "Query KNN Answer : " << endl;
-	for (int i = 0; i < queryKNNList.size(); i++)
-	{
-		cout << queryKNNList.at(i)->getNodeName() << ", " << queryKNNList.at(i)->getToQueryDistance() << endl;
-	}
-}
+//void ClientRNN::computeKNNAnswer(){
+//	//if candidateList.spot(R_i) 1NN = queryPoint q
+//	//RNN_AnswerList.enqueue(R_i)
+//	bool queryRegionRecievedFlag = false;
+//	//processFlag to know which process step right now & judge 
+//	if (processFlag == 0)
+//	{
+//		if (queryPoint == NULL)
+//			//getRandQueryPoint(inputDir);//get query point from obj
+//		//this->queryAmountK = queryAmountK; //KNN client use
+//		this->startRegionId = startRegionId;
+//		processFlag = 1;
+//	}
+//	
+//
+//	//if dijkstra not compute before, do dijkstra
+//	if (queryFinishedFlag == false)
+//	{
+//		computeToQueryDijkstra();
+//		queryFinishedFlag = true;
+//	}
+//
+//	if (this->startRegionId == 0)
+//	{
+//		latencyDataSize = computeIndexLatencySize(inputDir2, inputDir1, startRegionId, allRegionList.size() - 1);
+//		//latencyDataSize += computeDataLatencySize(inputDir6, startRegionId, allRegionList.size() - 1);
+//	}
+//	else
+//	{
+//		//latencyDataSize = computeIndexLatencySize(inputDir2, inputDir1, startRegionId, this->startRegionId - 1);
+//		//latencyDataSize += computeDataLatencySize(inputDir6, startRegionId, this->startRegionId - 1);
+//	}
+//	//broadcastCycleSize = computeIndexLatencySize(inputDir2, inputDir1, 0, allRegionList.size() - 1);
+//	//broadcastCycleSize += computeDataLatencySize(inputDir6, 0, allRegionList.size() - 1);
+//
+//	cout << endl << "///////////////////////////" << endl;
+//	cout << "BNN Recieved Region : " << endl;
+//	for (int i = 0; i < recievedRList.size(); i++)
+//		cout << "R" << recievedRList.at(i) << endl;
+//
+//	cout << endl;
+//	cout << "Query Point : " << queryPoint->getNodeName() << ", R" << queryPoint->getNodeRegionId() << endl;
+//	cout << "Query KNN Answer : " << endl;
+//	for (int i = 0; i < queryKNNList.size(); i++)
+//	{
+//		cout << queryKNNList.at(i)->getNodeName() << ", " << queryKNNList.at(i)->getToQueryDistance() << endl;
+//	}
+//}
 void ClientRNN::computeRNNAnswer(string inputDir, string inputDir1, string inputDir2, string inputDir3, string inputDir4, string inputDir5, string inputDir6, string inputDir7, int startRegionId){
 	bool queryRegionRecievedFlag = false;
 	/*candidateList = R_all;
 	receiveIndex();
 	locate Region R_q containing q;*/
-	if (processFlag == 0)
-	{
-		if (queryPoint == NULL)
-			getRandQueryPoint(inputDir);
-		//this->queryAmountK = queryAmountK; not compute KNN
-		this->startRegionId = startRegionId;
-		processFlag = 1;
-	}
-	/*
-	for each border node in R_q , b_1, ¡K,  b_i, ¡K, b_n do
-		compute ??[£p?_bi?^-, ?£p_bi?^+] = [£f^-, £f^+]¡Ñ?dist?_E(q, ? b?_i);
-		1if ?£p_bi?^+>maxdist(R_q) then ?£p_bi?^ += maxdist(R_q);
-	compute Candidate Region
-	computeCandidateRegion();
-		ComputeEveryRegionUpperBound();
-		ComputeLowerBound();
-		for each region? R?_1, ¡K, ? R?_i, ¡K, R_n do
-			if mindist(R_i, q)>upperBound(R_i) then
-				candidateList.deletequeue(R_i);
-	while candidateList is not empty do
-		if now broadcast region ? candidateList then
-			receiveDataSegment();*/
-	while (processFlag == 1 || candidateRegionToListenList.size() != 0){
-		bool isRegionCandidate = false;
-		//this circle to know which Region is Candidate Region
-		for (int i = 0; i < candidateRegionToListenList.size(); i++){
-			if (candidateRegionToListenList.at(i) == this->startRegionId){
-				isRegionCandidate = true;
-				break;
-			}
-		}
-		//continue if not candidate Region & not first time process
-		if (isRegionCandidate == false && processFlag != 1){
-			this->startRegionId++;
-			continue;
-		}
-		else
-			recievedRList.push_back(this->startRegionId);
-		listenBroadcastIndex(inputDir1, inputDir2, inputDir3, inputDir4, inputDir5, inputDir7);
-		if (processFlag == 1){
-			locateQueryPointRegion();//located Query Point with Region
-			processFlag = 2;
-		}
-		computeCandidateRegion();
-		listenBroadcastData(inputDir6 + to_string(this->startRegionId));
-		if (this->startRegionId - 1 == queryPoint->getNodeRegionId()){
-			//queryRegionRecievedFlag = true;
-			if (nowRecievedNodeAmount >= 1){
-				//computeToQueryDijkstra();
-				if (candidateRegionToListenList.size() == 0)
-					queryFinishedFlag = true;
-			}
-		}
-		/*else if (queryRegionRecievedFlag == true && nowRecievedNodeAmount >= 1){
-			computeToQueryDijkstra();
-			if (candidateRegionToListenList.size() == 0)
-				queryFinishedFlag = true;
-		}*/
+	//---------------------
+	getRandQueryPoint(inputDir);
+	this->startRegionId = startRegionId;
+	bool isStartRegion = true;
+	//for (int i = 0; i < allRegionList.size(); i++){
+	//	candidateRegionToListenList.push_back(i);
+	//}
 
-		//if finished listening cycle tail, start next listen from head
+	while (isStartRegion || candidateRegionToListenList.size() != 0) {
+		if (isStartRegion) {
+			listenBroadcastIndex(inputDir1, inputDir2, inputDir3, inputDir4, inputDir5, inputDir7);
+			locateQueryPointRegion();
+			computeCandidateRegion();
+			candidateRegionToListenList = candidateRegionIdList;
+		}
+		vector<int>::iterator candidateRegionIter = find(candidateRegionToListenList.begin(), candidateRegionToListenList.end(), this->startRegionId);
+		if (candidateRegionIter != candidateRegionToListenList.end()) {
+			if (isStartRegion)
+				listenBroadcastIndex(inputDir1, inputDir2, inputDir3, inputDir4, inputDir5, inputDir7);
+			listenBroadcastData(inputDir6 + to_string(this->startRegionId));
+			candidateRegionToListenList.erase(candidateRegionIter);
+			//cout << "find" << endl;
+			// no need to add startRegion, already added in listenBroadcastData
+		} 
+		else {
+			// means now listening region id
+			this->startRegionId++;
+			//cout << "not find" << endl;
+			//continue;
+		}
+
 		if (this->startRegionId == allRegionList.size())
 			this->startRegionId = 0;
-	}
-	//for each candidateList? R?_1, ¡K, ? R?_i, ¡K, R_n do
-		//compute candidateList.spot(R_i) 1NN by Dijkstra;
-	//computeKNNAnswer();
-	for (int i = 0; i < candidateRegionIdList.size(); i++){
-		cout << "candidate Region" << candidateRegionIdList.at(i) << endl;
-	}
 
-	/*if (queryFinishedFlag == false){
-		computeToQueryDijkstra();
-		queryFinishedFlag = true;
-	}*/
+		isStartRegion = false;
+	}
+	//---------------------
+
 	if (this->startRegionId == 0){
 		latencyDataSize = computeIndexLatencySize(inputDir2, inputDir1, startRegionId, allRegionList.size() - 1);
 		latencyDataSize += computeDataLatencySize(inputDir6, startRegionId, allRegionList.size() - 1);
