@@ -4524,7 +4524,7 @@ void skylineModel::precomputationIntegrate_RNN()
 	//file.open(outputFileDir + "_" + to_string(queryAmountK) + ".npi", ios::app | ios::out);
 	//file << "BroadcastCycle, TuningTime, Latency" << endl;
 	//file.close();
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		ClientRNN* clientRNN = new ClientRNN();
 		clientRNN->computeRNNAnswer(outputFileDir + ".objreg", outputFileDir + ".index", outputFileDir + ".nbnntable", outputFileDir + ".bb", outputFileDir + ".blist", outputFileDir + ".maxdist", outputFileDir + ".bnns", outputFileDir + ".npirrmin", startRegionId);

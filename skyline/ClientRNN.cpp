@@ -1094,13 +1094,13 @@ void ClientRNN::computeUpperBound(){
 						upperBoundList[i]->setDestinationRegionId(j);
 						cout << "Region : " << i << " UpperBound : " << upperBoundList[i]->getUpperBound();
 					}
-					else break;
 					//upperBoundList[i] = regUpperBound;
 				}
-				cout << "§ä¨ì·j´M­È¡I" << endl;
+				cout << i << " SpotRegion¡I" << endl;
 			}
 			else {
-				cout << "§ä¤£¨ì·j´M­È¡I" << endl;
+				cout << i << " zeroSpotRegion¡I" << endl;
+				break;
 			}		
 	//upperBound(R_i) = min(upperBound(R_i), maxdist(R_i, R_j))
 		}
