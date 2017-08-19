@@ -23,12 +23,12 @@ Region::~Region()
 
 void Region::setLongtitudeLeft(double longtitudeLeft)
 {
-	this->longtitudeLeft;
+	this->longtitudeLeft = longtitudeLeft;
 }
 
 void Region::setLongtitudeRight(double longtitudeRight)
 {
-	this->longtitudeRight;
+	this->longtitudeRight = longtitudeRight;
 }
 
 void Region::setLatitudeBottom(double latitudeBottom)

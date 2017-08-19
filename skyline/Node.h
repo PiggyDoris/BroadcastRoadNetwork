@@ -8,7 +8,6 @@
 #include <string>
 #include "Destination.h"
 using namespace std;
-
 class Node
 {
 public:
@@ -16,7 +15,8 @@ public:
 	~Node();
 	Node(string);
 	Node(double, double);
-	Node(double, double,int);
+	Node(double, double, int);
+	//Node(Node*, Node*);
 
 	void setLongtitude(double);
 	void setLatitude(double);
@@ -30,8 +30,8 @@ public:
 	void setNodeLineNumber(int);
 	void setToQueryDistance(int);
 	void setIsSpot(bool);
-	double getLongtitude();
-	double getLatitude();
+	double getLongtitude() const;
+	double getLatitude() const;
 	int getCounter();
 	string getNodeType();
 	vector<int> getRoadIdList();
@@ -44,6 +44,8 @@ public:
 	bool getIsSpot();
 	bool operator()(const Node* t1, const Node* t2);
 	bool operator < (const Node& ti) const;
+	//friend bool sortLongtitude(const Node& longtitude1, const Node& longtitude2);
+	//friend bool sortLatitude(const Node& latitude1, const Node& latitude2);
 
 protected:
 	int nodeId;
@@ -59,5 +61,18 @@ protected:
 	string nodeName;
 	vector<Destination*> destinationList;
 };
+struct sortLatitudeAndLongtitude
+{
+	sortLatitudeAndLongtitude(bool isLongtitude) :sortByLongtitude(isLongtitude){}
+	bool operator()(const Node* left, const Node* right)
+	{
+		if (sortByLongtitude)
+			return left->getLongtitude() < right->getLongtitude();
+		else
+			return left->getLatitude() < right->getLatitude();
+	}
+	bool sortByLongtitude;
+};
+
 
 #endif

@@ -3,6 +3,7 @@
 #include <iostream>
 using namespace std;
 
+
 Node::Node()
 {
 	longtitude = -1;
@@ -46,12 +47,12 @@ void Node::setLatitude(double latitude)
 	this->latitude = latitude;
 }
 
-double Node::getLongtitude()
+double Node::getLongtitude() const
 {
 	return longtitude;
 }
 
-double Node::getLatitude()
+double Node::getLatitude() const
 {
 	return latitude;
 }
@@ -155,6 +156,17 @@ bool Node::operator<(const Node& ti) const
 {
 	return nodeId < ti.nodeId;
 }
+
+//friend bool Node::sortLatitude(const Node* latitude1, const Node* latitude2)
+//{
+//	return latitude1->getlatitude() < latitude2->getlatitude();
+//}
+//
+//friend bool Node::sortLatitude()(const Node* latitude1, const Node* latitude2)
+//{
+//	return latitude1->latitude < latitude2->latitude;
+//}
+
 
 void Node::setNodeLineNumber(int nodeLineNumber)
 {

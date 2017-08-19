@@ -82,6 +82,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="BorderNode.h" />
     <ClInclude Include="Bound.h" />
     <ClInclude Include="Client.h" />
@@ -105,6 +106,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BinaryTree.cpp" />
     <ClCompile Include="BorderNode.cpp" />
     <ClCompile Include="Bound.cpp" />
     <ClCompile Include="Client.cpp" />

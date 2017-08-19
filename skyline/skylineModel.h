@@ -14,11 +14,13 @@
 #include <fstream>
 #include <cstring>
 #include <windows.h>
+#include "BinaryTree.h"
 
 
 #pragma once
 
 using namespace std;
+
 
 class skylineModel
 {
@@ -46,6 +48,15 @@ public:
 	void writeGridPartition(string, string, int, int);
 	void writeAllBorderRoadDistance(string, string);
 	void writeRegionAllNodeBorderData(string, string);
+	void writeISWNodeData(string, string);
+	void writeISWOrderedIdRegionNodeData(string, string);
+	void writeIswSpotDist(string, string, string, string, string);
+	void writeIswSpotDistOrderbyRegion(string, string, string);
+	void writeIswSpotToRegionMaxEuDist(string, string, string);
+	void writeIswSpotToRegionMinEuDist(string, string, string);
+	int computeMaxSpotToRegionEuDist(Node*, Region*);
+	int computeMinSpotToRegionEuDist(Node*, Region*);
+	void writeIswNSDist(string, string, string, string, string, string, int);
 	void writeBorderRoadDistanceAndRegion(string, string);
 	void dijkstra(string, string);
 	void writeAllOriginRoadDistance();
@@ -64,7 +75,16 @@ public:
 	void writeIndex(string, string, string, string, string, int);
 	void writeBorderList(string, string);
 	void writeBNAndNSDist(string, string, string, string, string, int);
-
+	void writekDTree(string, string, string);
+	void writeIswSpotRegion(string, string, string, string);
+	void writeIswAllRegionLamda(string, string, string, string, string);
+	Region* getMapMBR(string);
+	vector<Region*> getkdTreeRegion(TreeNode*, string);
+	void buildKDtreeRegion(TreeNode*, string);
+	void writeAllNodeRoadDistance(string , string);
+	void writeNodeRoadDistanceAndRegion(string, string, string);
+	void ISWdijkstra(string, string);
+	void writeISWRegionAllNodeData(string, string, string);
 	void writeNPIIndex(string, string, string);
 	void writeMinMaxRR(string, string, string);
 	vector<int> findBorderNodeRegion(vector<Region*>, string nodeName);
@@ -89,13 +109,15 @@ public:
 	void deleteNodeList(vector<Node*>);
 	void deleteRoadList(vector<Road*>);
 	void deleteFileLastLine(string, string);
-
+	TreeNode* buildKDtree(vector<Node*>,int);
 	int align(char*);
 
 private:
+	int kdtreeLeafRegion = 0;
 	int clientProcessedFlag;
 	vector<PointComponent*> points;
 	vector<PointComponent*> skylinePoints;
 	vector<BorderNode*> borderNodeList;
+	vector<Region*> kdtreeRegion;
 };
 

@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iomanip>
 #include "string.h"
+#include <cstring>
 #include "stdlib.h"
 #include "stdio.h"
 #include <typeinfo>
@@ -32,20 +33,19 @@ skylineModel::skylineModel()
 	clientProcessedFlag = 0;
 }
 
-
 skylineModel::~skylineModel()
 {
 }
 
 void skylineModel::create(int pointNum)
 {
-	for (int index = 0; index < pointNum;index++)
+	for (int index = 0; index < pointNum; index++)
 	{
 		PointComponent* point = new PointComponent();
-//		point->setPointX(rand() % 6+1);
-//		point->setPointY(rand() % 6+1);
-		point->setPointA(rand() % 8+1);
-		point->setPointB(rand() % 8+1);
+		//		point->setPointX(rand() % 6+1);
+		//		point->setPointY(rand() % 6+1);
+		point->setPointA(rand() % 8 + 1);
+		point->setPointB(rand() % 8 + 1);
 		points.push_back(point);
 	}
 
@@ -57,21 +57,20 @@ void skylineModel::create(int pointNum)
 	//}
 }
 
-
 vector<PointComponent*>* skylineModel::getPoints()				//取得全部的節點
 {
 	return &points;
 }
 
-vector<PointComponent*>* skylineModel::findSkyline(vector<PointComponent*>* points)	
+vector<PointComponent*>* skylineModel::findSkyline(vector<PointComponent*>* points)
 {
 
 
-	for (int index = 0; index< points->size(); index++)
+	for (int index = 0; index < points->size(); index++)
 	{
 		for (int i = 0; i < points->size(); i++)
 		{
-			if (points->at(index)->getPointX() <= points->at(i)->getPointX() && points->at(index)->getPointY() <= points->at(i)->getPointY() && points->at(index)->getPointA() <= points->at(i)->getPointA() && points->at(index)->getPointB() <= points->at(i)->getPointB() && points->at(index)->getTotal()<points->at(i)->getTotal())
+			if (points->at(index)->getPointX() <= points->at(i)->getPointX() && points->at(index)->getPointY() <= points->at(i)->getPointY() && points->at(index)->getPointA() <= points->at(i)->getPointA() && points->at(index)->getPointB() <= points->at(i)->getPointB() && points->at(index)->getTotal() < points->at(i)->getTotal())
 			{
 				points->at(i)->setIsSkyline(false);
 			}
@@ -140,7 +139,6 @@ void skylineModel::findNonSpatialSkyline()
 	displaySkyline(skylinePoints);
 }
 
-
 void skylineModel::displaySkyline(vector<PointComponent*> skylinePoints)
 {
 	cout << "number:" << skylinePoints.size() << endl << endl;
@@ -154,11 +152,9 @@ void skylineModel::displaySkyline(vector<PointComponent*> skylinePoints)
 	}
 }
 
-
-
 void skylineModel::loadFile()
 {
-	cout << "Please enter your file direction!"<<endl;
+	cout << "Please enter your file direction!" << endl;
 	string fileDir;
 	cin >> fileDir;//輸入檔案
 
@@ -171,7 +167,7 @@ void skylineModel::loadFile()
 	char input[SIZE];
 	cout << "Please enter your siteNum:";
 	cin >> input;
-	int attributeFlag=0;
+	int attributeFlag = 0;
 
 	char *delim = ",";
 	char *pch;
@@ -201,14 +197,14 @@ void skylineModel::loadFile()
 				secondField = pch;
 				break;
 			}
-			if (strcmp(pch, input) == 0 && attributeFlag==3)
+			if (strcmp(pch, input) == 0 && attributeFlag == 3)
 			{
-		//		cout << result << endl;
+				//		cout << result << endl;
 				file << result << "\n";
 				break;
 			}
-		//	cout << "pch:" << pch << endl;
-		//	cout << "line:" << line << endl;
+			//	cout << "pch:" << pch << endl;
+			//	cout << "line:" << line << endl;
 			pch = strtok(NULL, delim);
 		}
 	}
@@ -216,10 +212,9 @@ void skylineModel::loadFile()
 	clock_t nEnd = clock(); // 開始時間
 	cout << (float)(nStart) << endl;
 	cout << (float)(nEnd) << endl;
-	cout << (float)(nEnd - nStart)/CLK_TCK << endl;
+	cout << (float)(nEnd - nStart) / CLK_TCK << endl;
 	cout << endl;
 }
-
 
 void skylineModel::writeLandmarkToMBRFile()
 {
@@ -255,7 +250,7 @@ void skylineModel::writeLandmarkToMBRFile()
 			if (attributeFlag == 2)
 			{
 				file << pch << " ";
-			//	break;
+				//	break;
 			}
 			if (attributeFlag == 3)
 			{
@@ -308,12 +303,12 @@ void skylineModel::writeRoadToMBRFile()
 
 		//strcpy(result, line);
 		//cout << line << endl;
-	//	pch = strtok(line, delim);
+		//	pch = strtok(line, delim);
 		attributeFlag = 0;		//第幾個位置
 
 		std::vector<char*> v;
 		char* chars_array = strtok(line, delim);
-		while (chars_array!=NULL)
+		while (chars_array != NULL)
 		{
 			v.push_back(chars_array);
 			chars_array = strtok(NULL, delim);
@@ -326,7 +321,7 @@ void skylineModel::writeRoadToMBRFile()
 				if (attributeFlag == 2)
 				{
 					splitFloat = strtok(v[attributeFlag], point);
-				//	align(splitFloat);
+					//	align(splitFloat);
 					mbrA->setMbrX_int(atoi(splitFloat));
 					splitFloat = strtok(NULL, point);
 					mbrA->setMbrX_dec(align(splitFloat));
@@ -381,7 +376,7 @@ void skylineModel::writeRoadToMBRFile()
 						}
 						else
 						{
-							int dec = abs(carry +1000000) / 2;
+							int dec = abs(carry + 1000000) / 2;
 							int order = (int)(log(dec) / log(10) + 1);
 							file << mbrB->getMbrX_int() << ".";
 							for (int i = 0; i < 6 - order; i++)
@@ -391,7 +386,7 @@ void skylineModel::writeRoadToMBRFile()
 							file << dec << " ";
 						}
 					}
-					else if (mbrA->getMbrX_int()<mbrB->getMbrX_int())
+					else if (mbrA->getMbrX_int() < mbrB->getMbrX_int())
 					{
 						l = (mbrA->getMbrX_dec() - mbrB->getMbrX_dec() - 1000000) / 2;
 						int carry = mbrA->getMbrX_dec() + mbrB->getMbrX_dec();
@@ -436,8 +431,8 @@ void skylineModel::writeRoadToMBRFile()
 					if (mbrA->getMbrY_int() > mbrB->getMbrY_int())
 					{
 						int carry = mbrA->getMbrY_dec() + mbrB->getMbrY_dec();
-	
-						h=(mbrB->getMbrY_dec() - mbrA->getMbrY_dec()-1000000)/2;
+
+						h = (mbrB->getMbrY_dec() - mbrA->getMbrY_dec() - 1000000) / 2;
 						if (carry > 1000000)
 						{
 							int dec = abs(carry - 1000000) / 2;
@@ -455,7 +450,7 @@ void skylineModel::writeRoadToMBRFile()
 						}
 						else
 						{
-							int dec = abs(carry+1000000) / 2;
+							int dec = abs(carry + 1000000) / 2;
 							int order = (int)(log(dec) / log(10) + 1);
 							file << mbrB->getMbrY_int() << ".";
 							for (int i = 0; i < 6 - order; i++)
@@ -488,7 +483,7 @@ void skylineModel::writeRoadToMBRFile()
 						}
 						else
 						{
-							int dec = abs(carry+1000000) / 2;
+							int dec = abs(carry + 1000000) / 2;
 							int order = (int)(log(dec) / log(10) + 1);
 							file << mbrA->getMbrY_int() << ".";
 							for (int i = 0; i < 6 - order; i++)
@@ -505,9 +500,9 @@ void skylineModel::writeRoadToMBRFile()
 					}
 					else
 					{
-						h = (mbrA->getMbrY_dec() - mbrB->getMbrY_dec() ) / 2;
+						h = (mbrA->getMbrY_dec() - mbrB->getMbrY_dec()) / 2;
 						int carry = mbrA->getMbrY_dec() + mbrB->getMbrY_dec();
-						int dec = abs(carry ) / 2;
+						int dec = abs(carry) / 2;
 						int order = (int)(log(dec) / log(10) + 1);
 						file << mbrA->getMbrY_int() << ".";
 						for (int i = 0; i < 6 - order; i++)
@@ -544,7 +539,7 @@ void skylineModel::writeRoadToMBRFile()
 					}
 					file << abs(h) << "\n";
 
-					}
+				}
 			}
 
 		}
@@ -553,7 +548,7 @@ void skylineModel::writeRoadToMBRFile()
 	file.close();
 }
 
-void skylineModel::writeLocation(mbrInfo* mbrA,mbrInfo* mbrB)
+void skylineModel::writeLocation(mbrInfo* mbrA, mbrInfo* mbrB)
 {
 	ofstream file;
 	file.open("TPEC_ROAD.txt", ios::out);		//開啟檔案為輸出狀態，若檔案已存在則清除檔案內容重新寫入
@@ -562,7 +557,7 @@ void skylineModel::writeLocation(mbrInfo* mbrA,mbrInfo* mbrB)
 		int carry = mbrA->getMbrX_dec() + mbrB->getMbrX_dec();
 		int dec = abs(carry - 1000000) / 2;
 		int order = (int)(log(dec) / log(10) + 1);
-		if (carry>1000000)
+		if (carry > 1000000)
 		{
 			file << mbrA->getMbrX_int() << ".";
 			for (int i = 0; i < 6 - order; i++)
@@ -581,7 +576,7 @@ void skylineModel::writeLocation(mbrInfo* mbrA,mbrInfo* mbrB)
 			file << dec << " ";
 		}
 	}
-	else if (mbrA->getMbrX_int()<mbrB->getMbrX_int())
+	else if (mbrA->getMbrX_int() < mbrB->getMbrX_int())
 	{
 		int carry = mbrA->getMbrX_dec() + mbrB->getMbrX_dec();
 		int dec = abs(carry - 1000000) / 2;
@@ -658,7 +653,7 @@ void skylineModel::writeLocation(mbrInfo* mbrA,mbrInfo* mbrB)
 			}
 			file << dec << " ";
 		}
-			
+
 	}
 	else
 	{
@@ -674,7 +669,7 @@ int skylineModel::align(char* a)
 	int num;
 	num = atoi(a);
 	//cout << strlen(a);
-	if (strlen(a)!=6)
+	if (strlen(a) != 6)
 	{
 		//cout << strlen(a);
 		num = atoi(a);
@@ -707,7 +702,7 @@ void skylineModel::findIntersection()
 
 	clock_t nStart = clock(); // 開始時間
 	while (fin.getline(line, sizeof(line), '\n')){	//以行讀取
-//		strcpy(result, line);
+		//		strcpy(result, line);
 		//cout << line << endl;
 		pch = strtok(line, delim);
 		int attributeFlag = 0;
@@ -718,22 +713,22 @@ void skylineModel::findIntersection()
 			attributeFlag++;
 			if (attributeFlag == 1)
 			{
-				id = strtod(pch,NULL);
+				id = strtod(pch, NULL);
 				//file << pch << ",";
 				//	break;
 			}
-			if (attributeFlag==2)
+			if (attributeFlag == 2)
 			{
 				longitude = strtod(pch, NULL);
 			}
 			if (attributeFlag == 3)
 			{
 				latitude = strtod(pch, NULL);
-		//		file << pch << " 0 0";
-		//		file << "\n";
-		//		break;
+				//		file << pch << " 0 0";
+				//		file << "\n";
+				//		break;
 			}
-			if (latitude>26.13 && latitude<26.18)
+			if (latitude > 26.13 && latitude < 26.18)
 			{
 
 				cout << setprecision(9) << "id:" << id << " longitude:" << longitude << " latitude:" << latitude << "\n";
@@ -787,10 +782,10 @@ void skylineModel::writeAllOriginRoadDistance()
 	fin.open(fileDir, ios::in);
 	file.open(outputDir, ios::out | ios::binary);		//開啟檔案為輸出狀態，若檔案已存在則清除檔案內容重新寫入
 	clock_t nStart = clock(); // 開始時間
-	
+
 	//以行讀取
 	while (fin.getline(line, sizeof(line), '\n'))
-	{	
+	{
 		pch = strtok(line, delim);
 		int attributeFlag = 0;
 		double id = 0, turningAmount = 0, roadDist = 0;
@@ -847,7 +842,6 @@ void skylineModel::writeAllOriginRoadDistance()
 	//_CrtDumpMemoryLeaks();
 }
 
-
 void skylineModel::writeAllBorderRoadDistance(string inputDir, string outputDir)
 {
 	outputDir = outputDir + ".bn";
@@ -892,7 +886,7 @@ void skylineModel::writeAllBorderRoadDistance(string inputDir, string outputDir)
 						part_y = strtod(pch, NULL);
 					pch = strtok(NULL, delim);
 				}
-				file  << setprecision(9) << partitionType << "," << part_x << "," << part_y << endl;
+				file << setprecision(9) << partitionType << "," << part_x << "," << part_y << endl;
 			}
 			else if (lineNumber == 2)
 			{
@@ -986,13 +980,12 @@ void skylineModel::writeAllBorderRoadDistance(string inputDir, string outputDir)
 	//_CrtDumpMemoryLeaks();
 }
 
-
 double skylineModel::computeRoadDistance(vector<Node*> roadTurningPointList)
 {
 	double roadDist = 0;
 	for (int i = 1; i < roadTurningPointList.size(); i++)
 	{
-		roadDist = roadDist + abs(computeSectionDistance(roadTurningPointList.at(i-1)->getLatitude(), roadTurningPointList.at(i-1)->getLongtitude(), roadTurningPointList.at(i)->getLatitude(), roadTurningPointList.at(i)->getLongtitude()));
+		roadDist = roadDist + abs(computeSectionDistance(roadTurningPointList.at(i - 1)->getLatitude(), roadTurningPointList.at(i - 1)->getLongtitude(), roadTurningPointList.at(i)->getLatitude(), roadTurningPointList.at(i)->getLongtitude()));
 	}
 
 	return roadDist;
@@ -1140,7 +1133,7 @@ void skylineModel::writeGridPartition(string inputDir, string outputDir, int par
 
 					Node* roadIntersection = nodeList.back();
 					roadIntersection->setLatitude(latitude);
-					
+
 					if (nodeList.size() > 1)
 					{
 						Road* roadSection = new Road(nodeList.at(nodeList.size() - 2), roadIntersection);
@@ -1153,7 +1146,7 @@ void skylineModel::writeGridPartition(string inputDir, string outputDir, int par
 					}
 				}
 			}
-			else if(attributeFlag == 1)
+			else if (attributeFlag == 1)
 			{
 				roadId = strtod(pch, NULL);
 			}
@@ -1166,7 +1159,7 @@ void skylineModel::writeGridPartition(string inputDir, string outputDir, int par
 		for (int i = 0; i < nodeList.size(); i++)
 		{
 			turningPointCounter++;
-			if (i == 0 || i == nodeList.size()-1)
+			if (i == 0 || i == nodeList.size() - 1)
 			{
 				if (nodeList.at(i)->getNodeType() != "BorderNode")
 					roadTypeList.push_back("n");
@@ -1302,7 +1295,7 @@ void skylineModel::writeRandomSpots(string inputDir, string outputDir, int viewP
 	string str1;
 	fstream fin;
 	fin.open(inputDir, ios::in);
-	
+
 	while (fin.getline(line, sizeof(line), '\n'))	//以行讀取
 	{
 		lineNumber++;
@@ -1344,21 +1337,21 @@ vector<int> skylineModel::nonRepeatRandAndSort(int total, int needNum)
 	vector<int> card;
 	vector<int> randomList;
 	srand(time(NULL));
-	for (int i = 0; i < total;i++)
+	for (int i = 0; i < total; i++)
 	{
 		card.push_back(i);
 	}
-	for (int index = 0; index < total;index++)
+	for (int index = 0; index < total; index++)
 	{
 		int n = rand() % total;
 		int m = rand() % total;
 		swap(card.at(m), card.at(n));
 	}
-	for (int index = 0; index < needNum;index++)
+	for (int index = 0; index < needNum; index++)
 	{
 		randomList.push_back(card.at(index));
 	}
-	sort(randomList.begin(),randomList.end());
+	sort(randomList.begin(), randomList.end());
 	return randomList;
 }
 
@@ -1655,7 +1648,7 @@ void skylineModel::writeOrderedIdRegionNodeData(string inputDir, string outputDi
 				attributeFlag++;
 				if (attributeFlag == 1)
 				{
-					regNode = new Node(); 
+					regNode = new Node();
 					regNode->setNodeName(pch);
 					nodeList.push_back(regNode);
 				}
@@ -1875,7 +1868,7 @@ void skylineModel::writeRegionBorderData(string inputDir, string outputDir)
 			}
 		}
 	}
-	
+
 	vector<BorderNode*> regionBList = uniteBorderListWithAllRegion(regionList);
 
 	for (int i = 0; i < regionBList.size(); i++)
@@ -2086,7 +2079,7 @@ void skylineModel::writeBNAndNNDist(string inputDir1, string inputDir2, string i
 				}
 			}
 		}
-		cout << "region:" << i << " pos size:" << pos.size() << endl;
+		cout << "region:" << i << " pos size:" << pos.size() << endl;//pos is regionX section num
 		if (pos.size() == 0)
 		{
 			file2.open(inputDir3, ios::out);
@@ -2214,7 +2207,7 @@ void skylineModel::writeRegionMaxLamdaDist(string inputDir, string inputDir2, st
 					pch = strtok(NULL, delim);
 				}
 			}
-			
+
 		}
 		foutDir << maxDist << endl;
 		fin.close();
@@ -2295,7 +2288,7 @@ void skylineModel::writeRegionMaxLamdaDist(string inputDir, string inputDir2, st
 			lineNumber++;
 			str1 = "";
 			str1.append(line);
-			
+
 			int attributeFlag = 0;
 			pch = strtok(line, delim);
 			if (nodeList.at(lineNumber - 1)->getNodeType() == "BorderNode")
@@ -2382,7 +2375,7 @@ void skylineModel::writeBNNTable(string inputDir, string inputDir2, string input
 		int attributeFlag = 0;
 		string partitionType;
 		double roadDist = 0;
-		lineNumber++; 
+		lineNumber++;
 		Node* regNode;
 
 		//read Grid partition information
@@ -2449,7 +2442,7 @@ void skylineModel::writeBNNTable(string inputDir, string inputDir2, string input
 			}
 		}
 	}
-	fin.close(); 
+	fin.close();
 
 	//read .objreg
 	lineNumber = 0;
@@ -2650,7 +2643,7 @@ void skylineModel::writeBNNTable(string inputDir, string inputDir2, string input
 					borderNodeList.erase(borderNodeList.begin());
 				}
 			}
-			
+
 		}
 		fin.close();
 	}
@@ -2832,7 +2825,7 @@ void skylineModel::writeNewBNNTable(string inputDir, string inputDir2, string in
 					Node* tmpNode = finishedBorderNodeList.at(j);
 					while (tmpNode->getCounter() < tmpNode->getDestinationList().size() - 1 && tmpNode->getDestinationList().at(tmpNode->getCounter())->getRegionId() != i)
 						tmpNode->addCounter();
-					
+
 					if (tmpNode->getDestinationList().at(tmpNode->getCounter())->getRegionId() == i)
 					{
 						int listCounter = tmpNode->getCounter();
@@ -2929,7 +2922,7 @@ void skylineModel::writeNewSpotBNNTable(string inputDir, string inputDir2, strin
 	vector<string> sequencedAllNodeName;
 	fstream fin;
 	ofstream file;      //宣告fstream物件
-	
+
 	fin.open(inputDir2, ios::in);
 	while (fin.getline(line, sizeof(line), '\n'))
 	{
@@ -3274,7 +3267,7 @@ void skylineModel::writeIndex(string inputDir, string inputDir1, string inputDir
 		lineNumber = 0;
 		fin.open(inputDir1 + to_string(i), ios::in);
 		file.open(outputDir + to_string(i), ios::out | ios::app);
-		
+
 		while (fin.getline(line, sizeof(line), '\n'))
 		{
 			lineNumber++;
@@ -3505,503 +3498,6 @@ void skylineModel::writeNPIIndex(string inputDir, string inputDir1, string outpu
 	}
 }
 
-void skylineModel::writeMinMaxRR(string inputDir, string inputDir1, string outputDir)
-{
-	//get all region 
-	string outputDir1 = outputDir + ".npirrmax";
-	outputDir = outputDir + ".npirrmin";
-
-	//get region amount	&& get region bound		(1) .objreg
-	int lineNumber = 0;
-	int regionNum;
-	int xPart;
-	int yPart;
-	char line[SIZE];
-	char *pch;
-	char *delim = ",";
-	vector<double> partXList;
-	vector<double> partYList;
-	vector<Region*> regionList;
-
-	fstream fin;
-	ofstream file;
-
-	//get region number
-	fin.open(inputDir, ios::in);
-	while (fin.getline(line, sizeof(line), '\n'))
-	{
-		lineNumber++;
-		pch = strtok(line, delim);
-		int attributeFlag = 0;
-
-		if (lineNumber == 1)
-		{
-			while (pch != NULL)
-			{
-				attributeFlag++;
-				if (attributeFlag == 2)
-					xPart = atoi(pch);
-				if (attributeFlag == 3)
-				{
-					yPart = atoi(pch);
-					regionNum = xPart * yPart;
-				}
-
-				pch = strtok(NULL, delim);
-			}
-		}
-		else if (lineNumber == 2)
-		{
-			while (pch != NULL)
-			{
-				partXList.push_back(strtod(pch, NULL));
-				pch = strtok(NULL, delim);
-			}
-		}
-		else if (lineNumber == 3)
-		{
-			while (pch != NULL)
-			{
-				partYList.push_back(strtod(pch, NULL));
-				pch = strtok(NULL, delim);
-			}
-			break;
-		}
-	}
-	fin.close();
-
-	int regionId = 0;
-	//get region bound
-	for (int i = 0; i < partXList.size() - 1; i++)
-	{
-		for (int j = 0; j < partYList.size() - 1; j++)
-		{
-			Region* regRegion = new Region(regionId, partXList.at(i), partXList.at(i + 1), partYList.at(j), partYList.at(j + 1));
-			regionId++;
-			regionList.push_back(regRegion);
-		}
-	}
-
-	//set all region border node list
-	lineNumber = 0;
-	fin.open(inputDir, ios::in);
-	while (fin.getline(line, sizeof(line), '\n'))
-	{
-		lineNumber++;
-		pch = strtok(line, delim);
-		int attributeFlag = 0;
-		BorderNode* regBorderNode;
-
-		if (lineNumber > 3)
-		{
-			while (pch != NULL)
-			{
-				attributeFlag++;
-				if (attributeFlag == 1)
-				{
-					string str1 = "";
-					str1.append(pch);
-					if (str1.find("b_", 0) != string::npos)
-					{
-						regBorderNode = new BorderNode();
-						regBorderNode->setNodeName(pch);
-					}
-					else
-						break;
-				}
-				if (attributeFlag == 4)
-				{
-					regionList.at(atoi(pch))->setBorderNodeList(regBorderNode);
-				}
-
-				pch = strtok(NULL, delim);
-			}
-		}
-	}
-	fin.close();
-
-	//set borderGraphList by .bb
-	//get .bb
-	vector<BorderNode*> borderGraphList;
-	lineNumber = 0;
-	fin.open(inputDir1, ios::in);
-	//get all border node
-	while (fin.getline(line, sizeof(line), '\n'))	//以行讀取
-	{
-		lineNumber++;
-		int attributeFlag = 0;
-		pch = strtok(line, delim);
-		while (pch != NULL)
-		{
-			attributeFlag++;
-			if (attributeFlag == 1)
-			{
-				BorderNode* regBorderNode = new BorderNode();
-				regBorderNode->setNodeName(pch);
-				borderGraphList.push_back(regBorderNode);
-				break;
-			}
-			pch = strtok(NULL, delim);
-		}
-	}
-	fin.close();
-
-	lineNumber = 0;
-	fin.open(inputDir1, ios::in);
-	//get all border to border distance
-	while (fin.getline(line, sizeof(line), '\n'))	//以行讀取
-	{
-		lineNumber++;
-		int attributeFlag = 0;
-		pch = strtok(line, delim);
-		BorderNode* nowBorderNode;
-		nowBorderNode = borderGraphList.at(lineNumber - 1);
-		while (pch != NULL)
-		{
-			attributeFlag++;
-			if (attributeFlag != 1)
-			{
-				BorderNode* regBorderNode = borderGraphList.at(attributeFlag - 2);
-				Destination* regDestination = new Destination();
-				regDestination->setDestinationNode(regBorderNode);
-				regDestination->setStartPointNode(nowBorderNode);
-				regDestination->setPathDistance(strtod(pch, NULL));
-				nowBorderNode->setDestinationList(regDestination);
-			}
-			pch = strtok(NULL, delim);
-		}
-	}
-	fin.close();
-		
-
-
-	//set region of border node in borderGraphList
-	for (int j = 0; j < borderGraphList.size(); j++)
-	{
-		BorderNode* regBorderNode = borderGraphList.at(j);
-		vector<int> borderRegionIdList = findBorderNodeRegion(regionList, regBorderNode->getNodeName());
-		regBorderNode->setWholeRegionIdList(borderRegionIdList);
-	}
-
-	vector<int> allRegionMinDist;
-	vector<int> allRegionMaxDist;
-	for (int j = 0; j < regionNum; j++)
-	{
-		for (int k = 0; k < regionNum; k++)
-		{
-			allRegionMinDist.push_back(-1);
-			allRegionMaxDist.push_back(-1);
-		}
-	}
-
-	//minRRDist
-	//get Rj -> Rk minDist
-	for (int j = 0; j < borderGraphList.size(); j++)
-	{
-		BorderNode* regBorderNode = borderGraphList.at(j);
-		vector<Destination*> regBorderDestList = regBorderNode->getDestinationList();
-		for (int k = 0; k < regBorderDestList.size(); k++)
-		{
-			vector<int> borderRegionIdList = findBorderNodeRegion(regionList, regBorderDestList.at(k)->getDestinationNode()->getNodeName());
-			for (int l = 0; l < regBorderNode->getRegionIdList().size(); l++)
-			{
-				for (int m = 0; m < borderRegionIdList.size(); m++)
-				{
-					int regMinDist = allRegionMinDist.at(regBorderNode->getRegionIdList().at(l) * regionNum + borderRegionIdList.at(m));
-					if (regMinDist < 0 || regMinDist > regBorderDestList.at(k)->getPathDistance())
-						allRegionMinDist.at(regBorderNode->getRegionIdList().at(l) * regionNum + borderRegionIdList.at(m)) = regBorderDestList.at(k)->getPathDistance();
-
-					int regMaxDist = allRegionMaxDist.at(regBorderNode->getRegionIdList().at(l) * regionNum + borderRegionIdList.at(m));
-					if (regMaxDist < regBorderDestList.at(k)->getPathDistance())
-						allRegionMaxDist.at(regBorderNode->getRegionIdList().at(l) * regionNum + borderRegionIdList.at(m)) = regBorderDestList.at(k)->getPathDistance();
-				}
-			}
-		}
-	}
-	//compare R(0,1) vs R(1,0)
-	for (int j = 0; j < allRegionMinDist.size(); j++)
-	{
-		for (int k = 0; k < allRegionMinDist.size(); k++)
-		{
-			if (remainder(j, regionNum) == k / regionNum && j / regionNum == remainder(k, regionNum))
-			{
-				allRegionMinDist.at(j) = min(allRegionMinDist.at(j), allRegionMinDist.at(k));
-				allRegionMinDist.at(k) = allRegionMinDist.at(j);
-				allRegionMaxDist.at(j) = max(allRegionMaxDist.at(j), allRegionMaxDist.at(k));
-				allRegionMaxDist.at(k) = allRegionMaxDist.at(j);
-				break;
-			}
-		}
-	}
-	//set minimum to allregionList
-	for (int j = 0; j < allRegionMinDist.size(); j++)
-	{
-		Region* regRegion = regionList.at(j / regionNum);
-		regRegion->setMinRRDist(allRegionMinDist.at(j));
-		Region* regMaxRegion = regionList.at(j / regionNum);
-		regMaxRegion->setMaxRRDist(allRegionMaxDist.at(j));
-	}
-
-	file.open(outputDir, ios::out);
-	//cout region to region minimum
-	for (int j = 0; j < regionList.size(); j++)
-	{
-		for (int k = 0; k < regionList.at(j)->getMinRRDistList().size(); k++)
-		{
-			file << regionList.at(j)->getMinRRDistList().at(k);
-			if (k != regionList.size() - 1)
-				file  << ",";
-		}
-		file << endl;
-	}
-	file.close();
-
-	file.open(outputDir1, ios::out);
-	//cout region to region minimum
-	for (int j = 0; j < regionList.size(); j++)
-	{
-		for (int k = 0; k < regionList.at(j)->getMaxRRDistList().size(); k++)
-		{
-			file << regionList.at(j)->getMaxRRDistList().at(k);
-			if (k != regionList.size() - 1)
-				file << ",";
-		}
-		file << endl;
-	}
-	file.close();
-}
-
-vector<int> skylineModel::findBorderNodeRegion(vector<Region*> allRegionList, string nodeName)
-{
-	vector<int> nodeIdList;
-	for (int i = 0; i < allRegionList.size(); i++)
-	{
-		vector<BorderNode*> regBorderNodeList = allRegionList.at(i)->getBorderNodeList();
-		for (int j = 0; j < regBorderNodeList.size(); j++)
-		{
-			if (nodeName == regBorderNodeList.at(j)->getNodeName())
-				nodeIdList.push_back(i);
-		}
-	}
-	return nodeIdList;
-}
-
-std::vector<int> skylineModel::getBNNTableInNLayers(string inputDir, int regionId, int layerNum)
-{
-	vector<int> candidateRegionIdList;
-	vector<int> layerCandidateList;
-	vector<int> nowToDoCandidateList;
-	vector<Region*> allRegionList;
-
-	int lineNumber = 0;
-	char line[SIZE];
-	char *pch;
-	char *delim = ",";
-
-	fstream fin;
-
-	//set border node to allRegionList by .blist
-	fin.open(inputDir, ios::in);
-	while (fin.getline(line, sizeof(line), '\n'))
-	{
-		lineNumber++;
-		Region* regRegion = new Region();
-		regRegion->setId(lineNumber - 1);
-		pch = strtok(line, delim);
-		int attributeFlag = 0;
-
-		allRegionList.push_back(regRegion);
-		while (pch != NULL)
-		{
-			attributeFlag++;
-			if (attributeFlag % 3 == 1)
-			{
-				BorderNode* regBorderNode = new BorderNode();
-				regBorderNode->setNodeName(pch);
-				regRegion->setBorderNodeList(regBorderNode);
-			}
-			pch = strtok(NULL, delim);
-		}
-	}
-	fin.close();
-
-	//get adjacent Region
-	//continue if already candidate
-	candidateRegionIdList.push_back(regionId);
-	layerCandidateList.push_back(regionId);
-	vector<bool> isRegionCandidateList;
-	for (int i = 0; i < allRegionList.size(); i++)
-	{
-		if (i != regionId)
-			isRegionCandidateList.push_back(false);
-		else
-			isRegionCandidateList.push_back(true);
-	}
-
-
-	for (int i = 0; i < layerNum; i++)
-	{
-		nowToDoCandidateList = layerCandidateList;
-		for (int j = 0; j < nowToDoCandidateList.size(); j++)
-		{
-			if (nowToDoCandidateList.at(j) > allRegionList.back()->getId())
-				continue;
-			vector<BorderNode*> startRegionBorderList = allRegionList.at(nowToDoCandidateList.at(j))->getBorderNodeList();
-			for (int k = 0; k < allRegionList.size(); k++)
-			{
-				//if i = center region, pass
-				if (isRegionCandidateList.at(k) == true)
-					continue;
-				vector<BorderNode*> regRegionBorderList = allRegionList.at(k)->getBorderNodeList();
-				for (int l = 0; l < startRegionBorderList.size(); l++)
-				{
-					for (int m = 0; m < regRegionBorderList.size(); m++)
-					{
-						if (startRegionBorderList.at(l)->getNodeName() == regRegionBorderList.at(m)->getNodeName())
-						{
-							candidateRegionIdList.push_back(allRegionList.at(k)->getId());
-							layerCandidateList.push_back(allRegionList.at(k)->getId());
-							isRegionCandidateList.at(k) = true;
-							break;
-						}
-					}
-					if (isRegionCandidateList.at(k) == true)
-						break;
-				}
-			}
-			layerCandidateList.erase(layerCandidateList.begin());
-		}
-	}
-	
-
-	return candidateRegionIdList;
-}
-
-int skylineModel::getRegionNumber(string inputfile)
-{
-	int lineNumber = 0;
-	int regionNum;
-	char line[SIZE];
-	char *pch;
-	char *delim = ",";
-
-
-	fstream fin;
-	fin.open(inputfile, ios::in);
-	while (fin.getline(line, sizeof(line), '\n'))
-	{
-		lineNumber++;
-		pch = strtok(line, delim);
-		int attributeFlag = 0;
-
-		if (lineNumber == 1)
-		{
-			while (pch != NULL)
-			{
-				attributeFlag++;
-				if (attributeFlag == 2)
-					regionNum = atoi(pch);
-				if (attributeFlag == 3)
-					regionNum = regionNum * atoi(pch);
-
-				pch = strtok(NULL, delim);
-			}
-			break;
-		}
-	}
-	fin.close();
-	return regionNum;
-}
-
-Node* skylineModel::randQueryPoint(string inputDir)
-{
-	int lineNumber = 0;
-	int attributeFlag = 0;
-	vector<int> nodeLineNumberList;
-	char line[SIZE];
-	char *pch;
-	string str1;
-	char *delim = ",";
-
-	Node* queryPoint;
-	fstream fin;
-	fin.open(inputDir, ios::in);
-
-	while (fin.getline(line, sizeof(line), '\n'))	//以行讀取
-	{
-		lineNumber++;
-		pch = line;
-		str1 = "";
-		str1.append(pch);
-		if (str1.find("n_", 0) != string::npos)
-		{
-			nodeLineNumberList.push_back(lineNumber);
-		}
-	}
-	fin.close();
-	lineNumber = 0;
-	fin.open(inputDir, ios::in);
-
-	vector<int> randIdList = nonRepeatRandAndSort(nodeLineNumberList.size(), 1);
-	while (fin.getline(line, sizeof(line), '\n')){	//以行讀取
-		lineNumber++;
-		if (lineNumber > 3)
-		{
-			pch = strtok(line, delim);
-			
-			if (nodeLineNumberList.at(randIdList.back()) == lineNumber)
-			{
-				//cout << randIdList.at(index) << endl;
-				while (pch != NULL)
-				{
-					attributeFlag++;
-					if (attributeFlag == 1)
-					{
-						queryPoint = new Node();
-						queryPoint->setNodeName(pch);
-					}
-					else if (attributeFlag == 2)
-					{
-						queryPoint->setLongtitude(strtod(pch, NULL));
-					}
-					else if (attributeFlag == 3)
-					{
-						queryPoint->setLatitude(strtod(pch, NULL));
-						cout << "Query Point : " << queryPoint->getNodeName() << "," << queryPoint->getLongtitude() << "," << queryPoint->getLatitude() << endl;
-						return queryPoint;
-					}
-					pch = strtok(NULL, delim);
-				}
-			}
-		}
-	}
-}
-
-vector<int> skylineModel::getNodeLineNumberListObjreg(string inputDir)
-{
-	int lineNumber = 0;
-	vector<int> nodeLineNumberList;
-	char line[SIZE];
-	char *pch;
-	string str1;
-	char *delim = ",";
-	fstream fin;
-	fin.open(inputDir, ios::in);
-	while (fin.getline(line, sizeof(line), '\n'))	//以行讀取
-	{
-		lineNumber++;
-		pch = line;
-		str1 = "";
-		str1.append(pch);
-		if (str1.find("n_", 0) != string::npos)
-		{
-			nodeLineNumberList.push_back(lineNumber);
-		}
-	}
-	fin.close();
-	return nodeLineNumberList;
-}
-
 void skylineModel::writeRegionAllNodeBorderData(string inputDir, string outputDir)
 {
 	char line[SIZE];
@@ -4176,6 +3672,2530 @@ void skylineModel::writeRegionAllNodeBorderData(string inputDir, string outputDi
 	//_CrtDumpMemoryLeaks();
 }
 
+void skylineModel::writeMinMaxRR(string inputDir, string inputDir1, string outputDir)
+{
+	//get all region 
+	string outputDir1 = outputDir + ".npirrmax";
+	outputDir = outputDir + ".npirrmin";
+
+	//get region amount	&& get region bound		(1) .objreg
+	int lineNumber = 0;
+	int regionNum;
+	int xPart;
+	int yPart;
+	char line[SIZE];
+	char *pch;
+	char *delim = ",";
+	vector<double> partXList;
+	vector<double> partYList;
+	vector<Region*> regionList;
+
+	fstream fin;
+	ofstream file;
+
+	//get region number
+	fin.open(inputDir, ios::in);
+	while (fin.getline(line, sizeof(line), '\n'))
+	{
+		lineNumber++;
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+
+		if (lineNumber == 1)
+		{
+			while (pch != NULL)
+			{
+				attributeFlag++;
+				if (attributeFlag == 2)
+					xPart = atoi(pch);
+				if (attributeFlag == 3)
+				{
+					yPart = atoi(pch);
+					regionNum = xPart * yPart;
+				}
+
+				pch = strtok(NULL, delim);
+			}
+		}
+		else if (lineNumber == 2)
+		{
+			while (pch != NULL)
+			{
+				partXList.push_back(strtod(pch, NULL));
+				pch = strtok(NULL, delim);
+			}
+		}
+		else if (lineNumber == 3)
+		{
+			while (pch != NULL)
+			{
+				partYList.push_back(strtod(pch, NULL));
+				pch = strtok(NULL, delim);
+			}
+			break;
+		}
+	}
+	fin.close();
+
+	int regionId = 0;
+	//get region bound
+	for (int i = 0; i < partXList.size() - 1; i++)
+	{
+		for (int j = 0; j < partYList.size() - 1; j++)
+		{
+			Region* regRegion = new Region(regionId, partXList.at(i), partXList.at(i + 1), partYList.at(j), partYList.at(j + 1));
+			regionId++;
+			regionList.push_back(regRegion);
+		}
+	}
+
+	//set all region border node list
+	lineNumber = 0;
+	fin.open(inputDir, ios::in);
+	while (fin.getline(line, sizeof(line), '\n'))
+	{
+		lineNumber++;
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		BorderNode* regBorderNode;
+
+		if (lineNumber > 3)
+		{
+			while (pch != NULL)
+			{
+				attributeFlag++;
+				if (attributeFlag == 1)
+				{
+					string str1 = "";
+					str1.append(pch);
+					if (str1.find("b_", 0) != string::npos)
+					{
+						regBorderNode = new BorderNode();
+						regBorderNode->setNodeName(pch);
+					}
+					else
+						break;
+				}
+				if (attributeFlag == 4)
+				{
+					regionList.at(atoi(pch))->setBorderNodeList(regBorderNode);
+				}
+
+				pch = strtok(NULL, delim);
+			}
+		}
+	}
+	fin.close();
+
+	//set borderGraphList by .bb
+	//get .bb
+	vector<BorderNode*> borderGraphList;
+	lineNumber = 0;
+	fin.open(inputDir1, ios::in);
+	//get all border node
+	while (fin.getline(line, sizeof(line), '\n'))	//以行讀取
+	{
+		lineNumber++;
+		int attributeFlag = 0;
+		pch = strtok(line, delim);
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				BorderNode* regBorderNode = new BorderNode();
+				regBorderNode->setNodeName(pch);
+				borderGraphList.push_back(regBorderNode);
+				break;
+			}
+			pch = strtok(NULL, delim);
+		}
+	}
+	fin.close();
+
+	lineNumber = 0;
+	fin.open(inputDir1, ios::in);
+	//get all border to border distance
+	while (fin.getline(line, sizeof(line), '\n'))	//以行讀取
+	{
+		lineNumber++;
+		int attributeFlag = 0;
+		pch = strtok(line, delim);
+		BorderNode* nowBorderNode;
+		nowBorderNode = borderGraphList.at(lineNumber - 1);
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag != 1)
+			{
+				BorderNode* regBorderNode = borderGraphList.at(attributeFlag - 2);
+				Destination* regDestination = new Destination();
+				regDestination->setDestinationNode(regBorderNode);
+				regDestination->setStartPointNode(nowBorderNode);
+				regDestination->setPathDistance(strtod(pch, NULL));
+				nowBorderNode->setDestinationList(regDestination);
+			}
+			pch = strtok(NULL, delim);
+		}
+	}
+	fin.close();
+
+
+
+	//set region of border node in borderGraphList
+	for (int j = 0; j < borderGraphList.size(); j++)
+	{
+		BorderNode* regBorderNode = borderGraphList.at(j);
+		vector<int> borderRegionIdList = findBorderNodeRegion(regionList, regBorderNode->getNodeName());
+		regBorderNode->setWholeRegionIdList(borderRegionIdList);
+	}
+
+	vector<int> allRegionMinDist;
+	vector<int> allRegionMaxDist;
+	for (int j = 0; j < regionNum; j++)
+	{
+		for (int k = 0; k < regionNum; k++)
+		{
+			allRegionMinDist.push_back(-1);
+			allRegionMaxDist.push_back(-1);
+		}
+	}
+
+	//minRRDist
+	//get Rj -> Rk minDist
+	for (int j = 0; j < borderGraphList.size(); j++)
+	{
+		BorderNode* regBorderNode = borderGraphList.at(j);
+		vector<Destination*> regBorderDestList = regBorderNode->getDestinationList();
+		for (int k = 0; k < regBorderDestList.size(); k++)
+		{
+			vector<int> borderRegionIdList = findBorderNodeRegion(regionList, regBorderDestList.at(k)->getDestinationNode()->getNodeName());
+			for (int l = 0; l < regBorderNode->getRegionIdList().size(); l++)
+			{
+				for (int m = 0; m < borderRegionIdList.size(); m++)
+				{
+					int regMinDist = allRegionMinDist.at(regBorderNode->getRegionIdList().at(l) * regionNum + borderRegionIdList.at(m));
+					if (regMinDist < 0 || regMinDist > regBorderDestList.at(k)->getPathDistance())
+						allRegionMinDist.at(regBorderNode->getRegionIdList().at(l) * regionNum + borderRegionIdList.at(m)) = regBorderDestList.at(k)->getPathDistance();
+
+					int regMaxDist = allRegionMaxDist.at(regBorderNode->getRegionIdList().at(l) * regionNum + borderRegionIdList.at(m));
+					if (regMaxDist < regBorderDestList.at(k)->getPathDistance())
+						allRegionMaxDist.at(regBorderNode->getRegionIdList().at(l) * regionNum + borderRegionIdList.at(m)) = regBorderDestList.at(k)->getPathDistance();
+				}
+			}
+		}
+	}
+	//compare R(0,1) vs R(1,0)
+	for (int j = 0; j < allRegionMinDist.size(); j++)
+	{
+		for (int k = 0; k < allRegionMinDist.size(); k++)
+		{
+			if (remainder(j, regionNum) == k / regionNum && j / regionNum == remainder(k, regionNum))
+			{
+				allRegionMinDist.at(j) = min(allRegionMinDist.at(j), allRegionMinDist.at(k));
+				allRegionMinDist.at(k) = allRegionMinDist.at(j);
+				allRegionMaxDist.at(j) = max(allRegionMaxDist.at(j), allRegionMaxDist.at(k));
+				allRegionMaxDist.at(k) = allRegionMaxDist.at(j);
+				break;
+			}
+		}
+	}
+	//set minimum to allregionList
+	for (int j = 0; j < allRegionMinDist.size(); j++)
+	{
+		Region* regRegion = regionList.at(j / regionNum);
+		regRegion->setMinRRDist(allRegionMinDist.at(j));
+		Region* regMaxRegion = regionList.at(j / regionNum);
+		regMaxRegion->setMaxRRDist(allRegionMaxDist.at(j));
+	}
+
+	file.open(outputDir, ios::out);
+	//cout region to region minimum
+	for (int j = 0; j < regionList.size(); j++)
+	{
+		for (int k = 0; k < regionList.at(j)->getMinRRDistList().size(); k++)
+		{
+			file << regionList.at(j)->getMinRRDistList().at(k);
+			if (k != regionList.size() - 1)
+				file << ",";
+		}
+		file << endl;
+	}
+	file.close();
+
+	file.open(outputDir1, ios::out);
+	//cout region to region minimum
+	for (int j = 0; j < regionList.size(); j++)
+	{
+		for (int k = 0; k < regionList.at(j)->getMaxRRDistList().size(); k++)
+		{
+			file << regionList.at(j)->getMaxRRDistList().at(k);
+			if (k != regionList.size() - 1)
+				file << ",";
+		}
+		file << endl;
+	}
+	file.close();
+}
+
+vector<int> skylineModel::findBorderNodeRegion(vector<Region*> allRegionList, string nodeName)
+{
+	vector<int> nodeIdList;
+	for (int i = 0; i < allRegionList.size(); i++)
+	{
+		vector<BorderNode*> regBorderNodeList = allRegionList.at(i)->getBorderNodeList();
+		for (int j = 0; j < regBorderNodeList.size(); j++)
+		{
+			if (nodeName == regBorderNodeList.at(j)->getNodeName())
+				nodeIdList.push_back(i);
+		}
+	}
+	return nodeIdList;
+}
+
+std::vector<int> skylineModel::getBNNTableInNLayers(string inputDir, int regionId, int layerNum)
+{
+	vector<int> candidateRegionIdList;
+	vector<int> layerCandidateList;
+	vector<int> nowToDoCandidateList;
+	vector<Region*> allRegionList;
+
+	int lineNumber = 0;
+	char line[SIZE];
+	char *pch;
+	char *delim = ",";
+
+	fstream fin;
+
+	//set border node to allRegionList by .blist
+	fin.open(inputDir, ios::in);
+	while (fin.getline(line, sizeof(line), '\n'))
+	{
+		lineNumber++;
+		Region* regRegion = new Region();
+		regRegion->setId(lineNumber - 1);
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+
+		allRegionList.push_back(regRegion);
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag % 3 == 1)
+			{
+				BorderNode* regBorderNode = new BorderNode();
+				regBorderNode->setNodeName(pch);
+				regRegion->setBorderNodeList(regBorderNode);
+			}
+			pch = strtok(NULL, delim);
+		}
+	}
+	fin.close();
+
+	//get adjacent Region
+	//continue if already candidate
+	candidateRegionIdList.push_back(regionId);
+	layerCandidateList.push_back(regionId);
+	vector<bool> isRegionCandidateList;
+	for (int i = 0; i < allRegionList.size(); i++)
+	{
+		if (i != regionId)
+			isRegionCandidateList.push_back(false);
+		else
+			isRegionCandidateList.push_back(true);
+	}
+
+
+	for (int i = 0; i < layerNum; i++)
+	{
+		nowToDoCandidateList = layerCandidateList;
+		for (int j = 0; j < nowToDoCandidateList.size(); j++)
+		{
+			if (nowToDoCandidateList.at(j) > allRegionList.back()->getId())
+				continue;
+			vector<BorderNode*> startRegionBorderList = allRegionList.at(nowToDoCandidateList.at(j))->getBorderNodeList();
+			for (int k = 0; k < allRegionList.size(); k++)
+			{
+				//if i = center region, pass
+				if (isRegionCandidateList.at(k) == true)
+					continue;
+				vector<BorderNode*> regRegionBorderList = allRegionList.at(k)->getBorderNodeList();
+				for (int l = 0; l < startRegionBorderList.size(); l++)
+				{
+					for (int m = 0; m < regRegionBorderList.size(); m++)
+					{
+						if (startRegionBorderList.at(l)->getNodeName() == regRegionBorderList.at(m)->getNodeName())
+						{
+							candidateRegionIdList.push_back(allRegionList.at(k)->getId());
+							layerCandidateList.push_back(allRegionList.at(k)->getId());
+							isRegionCandidateList.at(k) = true;
+							break;
+						}
+					}
+					if (isRegionCandidateList.at(k) == true)
+						break;
+				}
+			}
+			layerCandidateList.erase(layerCandidateList.begin());
+		}
+	}
+
+
+	return candidateRegionIdList;
+}
+
+int skylineModel::getRegionNumber(string inputfile)
+{
+	int lineNumber = 0;
+	int regionNum;
+	char line[SIZE];
+	char *pch;
+	char *delim = ",";
+
+
+	fstream fin;
+	fin.open(inputfile, ios::in);
+	while (fin.getline(line, sizeof(line), '\n'))
+	{
+		lineNumber++;
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+
+		if (lineNumber == 1)
+		{
+			while (pch != NULL)
+			{
+				attributeFlag++;
+				if (attributeFlag == 2)
+					regionNum = atoi(pch);
+				if (attributeFlag == 3)
+					regionNum = regionNum * atoi(pch);
+
+				pch = strtok(NULL, delim);
+			}
+			break;
+		}
+	}
+	fin.close();
+	return regionNum;
+}
+
+Node* skylineModel::randQueryPoint(string inputDir)
+{
+	int lineNumber = 0;
+	int attributeFlag = 0;
+	vector<int> nodeLineNumberList;
+	char line[SIZE];
+	char *pch;
+	string str1;
+	char *delim = ",";
+
+	Node* queryPoint;
+	fstream fin;
+	fin.open(inputDir, ios::in);
+
+	while (fin.getline(line, sizeof(line), '\n'))	//以行讀取
+	{
+		lineNumber++;
+		pch = line;
+		str1 = "";
+		str1.append(pch);
+		if (str1.find("n_", 0) != string::npos)
+		{
+			nodeLineNumberList.push_back(lineNumber);
+		}
+	}
+	fin.close();
+	lineNumber = 0;
+	fin.open(inputDir, ios::in);
+
+	vector<int> randIdList = nonRepeatRandAndSort(nodeLineNumberList.size(), 1);
+	while (fin.getline(line, sizeof(line), '\n')){	//以行讀取
+		lineNumber++;
+		if (lineNumber > 3)
+		{
+			pch = strtok(line, delim);
+
+			if (nodeLineNumberList.at(randIdList.back()) == lineNumber)
+			{
+				//cout << randIdList.at(index) << endl;
+				while (pch != NULL)
+				{
+					attributeFlag++;
+					if (attributeFlag == 1)
+					{
+						queryPoint = new Node();
+						queryPoint->setNodeName(pch);
+					}
+					else if (attributeFlag == 2)
+					{
+						queryPoint->setLongtitude(strtod(pch, NULL));
+					}
+					else if (attributeFlag == 3)
+					{
+						queryPoint->setLatitude(strtod(pch, NULL));
+						cout << "Query Point : " << queryPoint->getNodeName() << "," << queryPoint->getLongtitude() << "," << queryPoint->getLatitude() << endl;
+						return queryPoint;
+					}
+					pch = strtok(NULL, delim);
+				}
+			}
+		}
+	}
+}
+
+vector<int> skylineModel::getNodeLineNumberListObjreg(string inputDir)
+{
+	int lineNumber = 0;
+	vector<int> nodeLineNumberList;
+	char line[SIZE];
+	char *pch;
+	string str1;
+	char *delim = ",";
+	fstream fin;
+	fin.open(inputDir, ios::in);
+	while (fin.getline(line, sizeof(line), '\n'))	//以行讀取
+	{
+		lineNumber++;
+		pch = line;
+		str1 = "";
+		str1.append(pch);
+		if (str1.find("n_", 0) != string::npos)
+		{
+			nodeLineNumberList.push_back(lineNumber);
+		}
+	}
+	fin.close();
+	return nodeLineNumberList;
+}
+//.iswindex
+void skylineModel::writekDTree(string inputSpotDir, string inputGeoDir, string outputDir)
+{
+	//.spot,.geo , file open 
+	fstream fin_geo, fin_spot;
+	fin_spot.open(inputSpotDir, ios::in);
+
+	//get all spots
+	vector<Node*> spotNameList;
+	vector<double> longtitudeList;
+	vector<double> latitudeList;
+	char line[300];
+	char *pch = 0;
+	char *delim = ",";
+	clock_t nStart = clock(); // 開始時間
+	while (fin_spot.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		Node* regNode = new Node();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1){
+				regNode->setNodeName(pch);
+			}
+			else if (attributeFlag == 2){
+				regNode->setLongtitude(strtod(pch, NULL));
+				longtitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 3){
+				regNode->setLatitude(strtod(pch, NULL));
+				latitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 5){
+				regNode->setRoadIdList(strtod(pch, NULL));
+			}
+			pch = strtok(NULL, delim);
+		}
+		spotNameList.push_back(regNode);
+	}
+	fin_spot.close();
+	vector<Node*> kdTreeNodeList = spotNameList;
+	int depth = 0;
+	kdtreeLeafRegion = 0;
+	Region* mapMBR = getMapMBR(inputGeoDir);
+	TreeNode* kdTreeRoot = buildKDtree(kdTreeNodeList, depth);
+	string outputDirIndex;
+	outputDirIndex = outputDir + ".ISWindex";
+	buildKDtreeRegion(kdTreeRoot, inputGeoDir);
+	ofstream file;      //宣告fstream物件
+	file.open(outputDirIndex, ios::out);		//開啟檔案為輸出狀態，若檔案已存在則清除檔案內容重新寫入
+	for (int i = 0; i < kdtreeRegion.size(); i++)
+	{
+		file << setprecision(9) << kdtreeRegion[i]->getId() << "," << setprecision(9) << kdtreeRegion[i]->getLongtitudeLeft() << "," << setprecision(9) << kdtreeRegion[i]->getLatitudeBottom() << "," << setprecision(9) << kdtreeRegion[i]->getLongtitudeRight() << "," << setprecision(9) << kdtreeRegion[i]->getLatitudeTop() << endl;
+	}
+	cout << "finish" << endl;
+	//writekDTreeFile(kdTreeRoot, outputDir);	//input kdTree to file
+}
+
+Region* skylineModel::getMapMBR(string inputDir)
+{
+	char line[SIZE];
+	char *pch;
+	char *delim = ",";
+	int roadId;
+	double maxLongtitude = -1, maxLatitude = -1;
+	double minLongtitude = -1, minLatitude = -1;
+	vector<string> roadTypeList;
+	vector<double> partitionLongtitudeList;
+	vector<double> partitionLatitudeList;
+	fstream fin;
+	fin.open(inputDir, ios::in);
+
+
+	clock_t nStart = clock(); // 開始時間
+	while (fin.getline(line, sizeof(line), '\n')){	//以行讀取
+		pch = strtok(line, delim);
+		if (pch == NULL)
+			break;
+		int attributeFlag = 0;
+		double id = 0, longitude = 0, latitude = 0;
+
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag != 1 && attributeFlag != 2)
+			{
+				if (attributeFlag % 2 == 1)
+				{
+					longitude = strtod(pch, NULL);
+					if (maxLongtitude == -1)
+					{
+						maxLongtitude = longitude;
+						minLongtitude = longitude;
+					}
+					else
+					{
+						//maxNode->setLongtitude(max(longitude, maxNode->getLongtitude()));
+						if (longitude > maxLongtitude)
+							maxLongtitude = longitude;
+						else if (longitude < minLongtitude)
+							minLongtitude = longitude;
+					}
+				}
+				else
+				{
+					latitude = strtod(pch, NULL);
+					if (maxLatitude == -1)
+					{
+						maxLatitude = latitude;
+						minLatitude = latitude;
+					}
+					else
+					{
+						if (latitude > maxLatitude)
+							maxLatitude = latitude;
+						else if (latitude < minLatitude)
+							minLatitude = latitude;
+					}
+				}
+			}
+			pch = strtok(NULL, delim);
+		}
+	}
+
+	maxLongtitude += 0.0005;
+	minLongtitude -= 0.0005;
+	maxLatitude += 0.0005;
+	minLatitude -= 0.0005;
+	fin.close();
+	Region* mapMBR = new Region();
+	mapMBR->setLatitudeBottom(minLatitude);
+	mapMBR->setLatitudeTop(maxLatitude);
+	mapMBR->setLongtitudeLeft(minLongtitude);
+	mapMBR->setLongtitudeRight(maxLongtitude);
+
+	return mapMBR;
+}
+//function kdtree(list of points pointList, int depth)
+
+TreeNode* skylineModel::buildKDtree(vector<Node*> spotList, int depth)
+{
+	TreeNode *new_node = new TreeNode();
+
+	if (spotList.size() == 1)
+	{
+
+		//node.location : = median;
+		Node* leafnode = spotList[0];
+		new_node->setTreeLeafData(leafnode);//leaf node data
+		//node.leftChild : = kdtree(points in pointList before median, depth + 1);
+		new_node->setTreeNodeIsLeaf(true);
+		new_node->setRegionNum(kdtreeLeafRegion);
+		//return node;
+		kdtreeLeafRegion++;
+		//return new_node;
+	}
+	else
+	{
+		// Select axis based on depth so that axis cycles through all valid values
+		//var int axis : = depth mod k;
+		vector<Node*>leftMedian;
+		vector<Node*>rightMedian;
+		bool isAxis = depth % 2;
+		double median = 0;
+		if (isAxis == true)
+		{
+			//cut x axis
+			// Sort point list and choose median as pivot element
+			sort(spotList.begin(), spotList.end(), sortLatitudeAndLongtitude(isAxis));
+			if (spotList.size() % 2 != 0)//select median by axis from pointList;
+			{
+				median = (spotList.at(((spotList.size() + 1) / 2) - 1)->getLongtitude() + spotList.at((spotList.size() + 1) / 2)->getLongtitude()) / 2;
+
+				for (int i = 0; i < spotList.size(); i++)
+				{
+					if (spotList.at(i)->getLongtitude() < median)
+					{
+						leftMedian.push_back(spotList[i]);
+					}
+					else
+					{
+						rightMedian.push_back(spotList[i]);
+					}
+				}
+			}
+			else
+			{
+				median = (spotList.at(((spotList.size() + 1) / 2) - 1)->getLongtitude() + spotList.at((spotList.size() + 1) / 2)->getLongtitude()) / 2;
+				for (int i = 0; i < spotList.size(); i++)
+				{
+					if (spotList.at(i)->getLongtitude() < median)
+					{
+						leftMedian.push_back(spotList[i]);
+					}
+					else
+					{
+						rightMedian.push_back(spotList[i]);
+					}
+				}
+			}
+		}
+		else
+		{
+			//cut y axis
+			// Sort point list and choose median as pivot element
+			sort(spotList.begin(), spotList.end(), sortLatitudeAndLongtitude(isAxis));
+			if (spotList.size() % 2 != 0)//select median by axis from pointList;
+			{
+				median = (spotList.at(((spotList.size() + 1) / 2) - 1)->getLatitude() + spotList.at((spotList.size() + 1) / 2)->getLatitude()) / 2;
+				for (int i = 0; i < spotList.size(); i++)
+				{
+					if (spotList.at(i)->getLatitude() < median)
+					{
+						leftMedian.push_back(spotList[i]);
+					}
+					else
+					{
+						rightMedian.push_back(spotList[i]);
+					}
+				}
+			}
+			else
+			{
+				median = (spotList.at(((spotList.size() + 1) / 2) - 1)->getLatitude() + spotList.at(spotList.size() / 2)->getLatitude()) / 2;
+				for (int i = 0; i < spotList.size(); i++)
+				{
+					if (spotList.at(i)->getLatitude() < median)
+					{
+						leftMedian.push_back(spotList[i]);
+					}
+					else
+					{
+						rightMedian.push_back(spotList[i]);
+					}
+				}
+			}
+		}
+
+		// Create node and construct subtrees
+		//var tree_node node;
+
+		//TreeNode *new_node = new TreeNode();
+		if (isAxis == true)
+		{
+			char axis = 'x';
+			new_node->setTreeNodeAxis(axis);
+		}
+		else
+		{
+			char axis = 'y';
+			new_node->setTreeNodeAxis(axis);
+		}
+		//node.location : = median;
+		new_node->setTreeNodeData(median);
+		//node.leftChild : = kdtree(points in pointList before median, depth + 1);
+		TreeNode* childLeftNode = buildKDtree(leftMedian, depth + 1);
+		new_node->setTreeNodeLeftChild(childLeftNode);
+		childLeftNode->setTreeNodeParent(new_node);
+		//node.rightChild : = kdtree(points in pointList after median, depth + 1);
+		TreeNode* childRightNode = buildKDtree(rightMedian, depth + 1);
+		new_node->setTreeNodeRightChild(childRightNode);
+		childRightNode->setTreeNodeParent(new_node);
+	}
+	return new_node;
+}
+
+void skylineModel::writeIswSpotRegion(string inputDir_Oobjreg, string inputDir_spot, string inputDir_index, string outputDir)
+{
+	int lineNumber = 0;
+	int regionNum;
+	int regDist;
+	vector<int> nodeLineNumberList;
+	vector<Region*> regionList;
+	char line[SIZE];
+	char *pch;
+	string str1;
+	char *delim = ",";
+
+	fstream fin, fin_index, fin_spot, fin_objreg;
+	ofstream foutDir; //cout file .IswLamdaX (X = RegionNum) 
+
+	//know region total number
+	fin_index.open(inputDir_index, ios::in);
+	while (fin_index.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string type;
+		string partitionType;
+		int num_region;
+		int roadRegionId;
+		double L_longtitude, R_longtitude, L_latitude, R_latitude;
+		double longtitude, latitude;
+		double dist;
+		//cout << "lineNumber " << lineNumber << endl;
+		Region* IswRegion = new Region();
+
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				num_region = strtod(pch, NULL);
+				IswRegion->setId(num_region);
+			}
+			else if (attributeFlag == 2)
+			{
+				L_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeLeft(L_longtitude);
+			}
+			else if (attributeFlag == 3)
+			{
+				L_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeBottom(L_latitude);
+			}
+			else if (attributeFlag == 4)
+			{
+				R_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeRight(R_longtitude);
+			}
+			else if (attributeFlag == 5)
+			{
+				R_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeTop(R_latitude);
+			}
+			pch = strtok(NULL, delim);
+		}
+		regionList.push_back(IswRegion);
+	}
+	regionNum = regionList.size();
+	fin_index.close();
+
+	fin_spot.open(inputDir_spot, ios::in);
+	//get all spots
+	vector<Node*> spotNameList;
+	//vector<double> longtitudeList;
+	//vector<double> latitudeList;
+	pch = 0;
+	lineNumber = 0;
+	clock_t nStart = clock(); // 開始時間
+	while (fin_spot.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		Node* regNode = new Node();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1){
+				regNode->setNodeName(pch);
+			}
+			else if (attributeFlag == 2){
+				regNode->setLongtitude(strtod(pch, NULL));
+				//longtitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 3){
+				regNode->setLatitude(strtod(pch, NULL));
+				//latitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 5){
+				regNode->setRoadIdList(strtod(pch, NULL));
+			}
+			pch = strtok(NULL, delim);
+		}
+		spotNameList.push_back(regNode);
+	}
+	fin_spot.close();
+	fin_objreg.open(inputDir_Oobjreg, ios::in);
+	//get all nodes
+	vector<Node*> nodeNameList;
+	//vector<double> longtitudeList;
+	//vector<double> latitudeList;
+	pch = 0;
+	lineNumber = 0;
+	//clock_t nStart = clock(); // 開始時間
+	while (fin_objreg.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		Node* regNode = new Node();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1){
+				regNode->setNodeName(pch);
+			}
+			else if (attributeFlag == 2){
+				regNode->setLongtitude(strtod(pch, NULL));
+				//longtitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 3){
+				regNode->setLatitude(strtod(pch, NULL));
+				//latitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 5){
+				regNode->setRoadIdList(strtod(pch, NULL));
+			}
+			pch = strtok(NULL, delim);
+		}
+		nodeNameList.push_back(regNode);
+	}
+	fin_objreg.close();
+	for (int i = 0; i < nodeNameList.size(); i++)
+	{
+		for (int j = 0; j < spotNameList.size(); j++)
+		{
+			if ((nodeNameList.at(i)->getLongtitude() == spotNameList.at(j)->getLongtitude()) && (nodeNameList.at(i)->getLatitude() == spotNameList.at(j)->getLatitude()))
+			{
+				spotNameList.at(j)->setNodeName(nodeNameList.at(i)->getNodeName());
+			}
+		}
+	}
+	for (int i = 0; i < spotNameList.size(); i++)
+	{
+		for (int j = 0; j < regionNum; j++)
+		{
+			if ((spotNameList.at(i)->getLongtitude() > regionList.at(j)->getLongtitudeLeft())&&(spotNameList.at(i)->getLatitude() > regionList.at(j)->getLatitudeBottom()) && (spotNameList.at(i)->getLongtitude() < regionList.at(j)->getLongtitudeRight()) && (spotNameList.at(i)->getLatitude() < regionList.at(j)->getLatitudeTop()))
+			{
+				spotNameList.at(i)->setNodeRegionId(j);
+			}
+		}
+	}
+	//get node id & sort by id
+	delim = "_";
+	for (int i = 0; i < spotNameList.size(); i++)
+	{
+		strcpy(line, spotNameList.at(i)->getNodeName().c_str());
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 2)
+				spotNameList.at(i)->setNodeId(atoi(pch));
+
+			pch = strtok(NULL, delim);
+		}
+	}
+	sort(spotNameList.begin(), spotNameList.end(), Node());
+
+	foutDir.open(outputDir + ".ISWspot", ios::out);
+	for (int i = 0; i < spotNameList.size(); i++)
+	{
+		foutDir << setprecision(9) << spotNameList.at(i)->getNodeName() << "," << setprecision(9) << spotNameList.at(i)->getLongtitude() << "," << setprecision(9) << spotNameList.at(i)->getLatitude() << "," << setprecision(9) << spotNameList.at(i)->getNodeRegionId() << endl;
+	}
+	foutDir.close();
+}
+
+void skylineModel::buildKDtreeRegion(TreeNode* currentNode, string inputGeoDir)
+{
+	if (currentNode->getTreeNodeIsLeaf() == true)
+	{
+		TreeNode* parentNode = currentNode->getTreeNodeParent();
+		Region* kdRegion = new Region();
+		double currentX = currentNode->getTreeLeafData()->getLongtitude();
+		double currentY = currentNode->getTreeLeafData()->getLatitude();
+		while (parentNode != NULL)
+		{
+			if (parentNode->getTreeNodeAxis() == 'x')
+			{
+				//if is Region left boundary
+				if (currentX > parentNode->getTreeNodeData())
+				{
+					if (kdRegion->getLongtitudeLeft() == NULL)
+					{
+						kdRegion->setLongtitudeLeft(parentNode->getTreeNodeData());
+					}
+				}
+				//if is Region right boundary
+				else
+				{
+					if (kdRegion->getLongtitudeRight() == NULL)
+					{
+						kdRegion->setLongtitudeRight(parentNode->getTreeNodeData());
+					}
+				}
+			}
+			else
+			{
+				//if is Region Bottom boundary
+				if (currentY > parentNode->getTreeNodeData())
+				{
+					if (kdRegion->getLatitudeBottom() == NULL)
+					{
+						kdRegion->setLatitudeBottom(parentNode->getTreeNodeData());
+					}
+				}
+				//if is Region Top boundary
+				else
+				{
+					if (kdRegion->getLatitudeTop() == NULL)
+					{
+						kdRegion->setLatitudeTop(parentNode->getTreeNodeData());
+					}
+				}
+			}
+			parentNode = parentNode->getTreeNodeParent();
+		}
+		//if kdRegion miss boundary, fill it with mapMBR boundary
+		Region* mapMBR = getMapMBR(inputGeoDir);
+		if (kdRegion->getLatitudeTop() == NULL)
+		{
+			kdRegion->setLatitudeTop(mapMBR->getLatitudeTop());
+		}
+		if (kdRegion->getLatitudeBottom() == NULL)
+		{
+			kdRegion->setLatitudeBottom(mapMBR->getLatitudeBottom());
+		}
+		if (kdRegion->getLongtitudeLeft() == NULL)
+		{
+			kdRegion->setLongtitudeLeft(mapMBR->getLongtitudeLeft());
+		}
+		if (kdRegion->getLongtitudeRight() == NULL)
+		{
+			kdRegion->setLongtitudeRight(mapMBR->getLongtitudeRight());
+		}
+		currentNode->setLeafRegion(kdRegion);
+		//string s = d.ToString();
+		cout << currentNode->getRegionNum() << " : " << endl;
+		cout << "latitude & longtitude :" << setprecision(9) << currentNode->getTreeLeafData()->getLatitude() << " , " << setprecision(9) << currentNode->getTreeLeafData()->getLongtitude() << endl;
+		cout << "Region leftBottom : " << setprecision(9) << currentNode->getLeafRegion()->getLongtitudeLeft() << " , " << setprecision(9) << currentNode->getLeafRegion()->getLatitudeBottom() << endl;
+		cout << "Region rightTop : " << setprecision(9) << currentNode->getLeafRegion()->getLongtitudeRight() << " , " << setprecision(9) << currentNode->getLeafRegion()->getLatitudeTop() << endl;
+		Region* leafRegion = new Region();
+		leafRegion->setId(currentNode->getRegionNum());
+		leafRegion->setLongtitudeLeft(currentNode->getLeafRegion()->getLongtitudeLeft());
+		leafRegion->setLatitudeBottom(currentNode->getLeafRegion()->getLatitudeBottom());
+		leafRegion->setLongtitudeRight(currentNode->getLeafRegion()->getLongtitudeRight());
+		leafRegion->setLatitudeTop(currentNode->getLeafRegion()->getLatitudeTop());
+		kdtreeRegion.push_back(leafRegion);
+	}
+	else
+	{
+		TreeNode* leftChildNode = currentNode->getTreeNodeLeftChild();
+		if (leftChildNode != NULL)
+		{
+			buildKDtreeRegion(leftChildNode, inputGeoDir);
+		}
+		TreeNode* rightChildNode = currentNode->getTreeNodeRightChild();
+		if (rightChildNode != NULL)
+		{
+			buildKDtreeRegion(rightChildNode, inputGeoDir);
+		}
+	}
+
+}
+
+//.iswgeo
+void skylineModel::writeISWNodeData(string inputDirGeo, string outputDir)
+{
+	//將路口命名N_num
+	char line[SIZE];
+	int lineNumber = 0;
+	char *pch;
+	char *delim = ",";
+	int roadId;
+	vector<string> roadTypeList;
+	fstream fin;
+	ofstream file;      //宣告fstream物件
+	fin.open(inputDirGeo, ios::in);
+	file.open(outputDir + ".ISWgeo", ios::out);//開啟檔案為輸出狀態，若檔案已存在則清除檔案內容重新寫入
+	clock_t nStart = clock(); // 開始時間
+	while (fin.getline(line, sizeof(line), '\n'))
+	{	//以行讀取
+		vector<Node*> nodeList;
+		vector<Road*> roadList;
+		pch = strtok(line, delim);
+		if (pch == NULL)
+			break;
+		int attributeFlag = 0;
+		double id = 0, longitude = 0, latitude = 0;
+
+		while (pch != NULL)
+		{
+			attributeFlag++;
+
+			//依序檢查每個Road Section檢查並找出Border Node
+			if (attributeFlag != 1 && attributeFlag != 2)
+			{
+				if (attributeFlag % 2 == 1)
+				{
+					longitude = strtod(pch, NULL);
+
+					Node* roadIntersection = new Node();
+					roadIntersection->setLongtitude(longitude);
+					nodeList.push_back(roadIntersection);
+				}
+				else
+				{
+					latitude = strtod(pch, NULL);
+
+					Node* roadIntersection = nodeList.back();
+					roadIntersection->setLatitude(latitude);
+
+					if (nodeList.size() > 1)
+					{
+						Road* roadSection = new Road(nodeList.at(nodeList.size() - 2), roadIntersection);
+						//如果有找到Border Node
+						/*if (isBorderNodeInside(roadSection, partitionLongtitudeList, partitionLatitudeList) == true)
+						{
+						addBorderNodeToList(roadSection, partitionLongtitudeList, partitionLatitudeList);
+						nodeList.insert(nodeList.end() - 1, borderNodeList.back());
+						}*/
+					}
+				}
+			}
+			else if (attributeFlag == 1)
+			{
+				roadId = strtod(pch, NULL);
+			}
+			pch = strtok(NULL, delim);
+		}
+
+		int turningPointCounter = 0;
+		vector<int> turningPointCounterList;
+		//記錄此條路中是由幾個Border Node組成
+		for (int i = 0; i < nodeList.size(); i++)
+		{
+			turningPointCounter++;
+			if (i == 0 || i == nodeList.size() - 1)
+			{
+				if (nodeList.at(i)->getNodeType() != "BorderNode")
+					roadTypeList.push_back("n");
+				if (i == nodeList.size() - 1)
+					turningPointCounterList.push_back(turningPointCounter);
+			}
+			if (nodeList.at(i)->getNodeType() == "BorderNode")
+			{
+				roadTypeList.push_back("b");
+				turningPointCounterList.push_back(turningPointCounter);
+				turningPointCounter = 1;
+			}
+		}
+
+		//印出該條路的資訊
+		int roadTypeListCounter = 0;
+		//要分成兩行寫，否則會有超出範圍的錯誤
+		file << roadId << "," << turningPointCounterList.at(roadTypeListCounter) << ",";
+		file << roadTypeList.at(roadTypeListCounter++) << roadTypeList.at(roadTypeListCounter) << ",";
+		for (int i = 0; i < nodeList.size(); i++)
+		{
+			if (nodeList.at(i)->getNodeType() != "BorderNode")
+			{
+				//檢查有沒有到該行的最後一個
+				if (i != nodeList.size() - 1)
+					file << setprecision(9) << nodeList.at(i)->getLongtitude() << "," << nodeList.at(i)->getLatitude() << ",";
+				else
+					file << setprecision(9) << nodeList.at(i)->getLongtitude() << "," << nodeList.at(i)->getLatitude();
+			}
+			else
+			{
+				file << setprecision(9) << nodeList.at(i)->getLongtitude() << "," << nodeList.at(i)->getLatitude() << endl;
+				if (i != nodeList.size() - 1)
+				{
+					file << roadId << "," << turningPointCounterList.at(roadTypeListCounter) << ",";
+					file << roadTypeList.at(roadTypeListCounter++) << roadTypeList.at(roadTypeListCounter) << "," << nodeList.at(i)->getLongtitude() << "," << nodeList.at(i)->getLatitude() << ",";
+				}
+			}
+		}
+		roadTypeList.resize(0);
+		deleteNodeList(nodeList);
+		deleteRoadList(roadList);
+		file << endl;
+	}
+}
+//記錄路段距離 .ISWnn
+void skylineModel::writeAllNodeRoadDistance(string inputDirGeo, string outputDir)
+{
+	outputDir = outputDir + ".ISWnn";
+
+	int lineNumber = 0;
+	char line[SIZE];
+	char *pch;
+	char *delim = ",";
+	fstream fin_geo, fin_index;
+	ofstream file;      //宣告fstream物件
+	fin_geo.open(inputDirGeo, ios::in);
+	file.open(outputDir, ios::out | ios::binary);		//開啟檔案為輸出狀態，若檔案已存在則清除檔案內容重新寫入
+	clock_t nStart = clock(); // 開始時間
+
+	//以行讀取
+	while (fin_geo.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string partitionType;
+		string roadType;
+		double id = 0, turningAmount = 0, roadDist = 0;
+		vector<Node*> turningPointList;
+		lineNumber++;
+
+		//read kdtree information
+		while (pch != NULL)
+		{
+			Node* turningPoint;
+			attributeFlag++;
+			//記錄ID, 轉折點, 起點
+			if (attributeFlag == 1)
+			{
+				id = strtod(pch, NULL);
+			}
+			else if (attributeFlag == 2)
+			{
+				turningAmount = strtod(pch, NULL);
+			}
+			else if (attributeFlag == 3)
+			{
+				roadType = pch;
+			}
+
+			//將起點&終點交替放入register
+			//_CrtDumpMemoryLeaks();
+			if (attributeFlag % 2 == 1 && attributeFlag != 1 && attributeFlag != 3)
+			{
+				turningPoint = turningPointList.back();
+				turningPoint->setLatitude(strtod(pch, NULL));
+				if (turningPointList.size() > 1)
+				{
+					roadDist = computeRoadDistance(turningPointList);
+				}
+			}
+			else if (attributeFlag % 2 == 0 && attributeFlag != 2)
+			{
+				//要使用時再分配，否則會有記憶體洩漏的狀況發生 -- 重要!!
+				turningPoint = new Node();
+				turningPoint->setLongtitude(strtod(pch, NULL));
+				turningPointList.push_back(turningPoint);
+			}
+
+			//記錄終點並計算 dist(起點, 終點)
+			if (turningAmount > 0 && attributeFlag == turningAmount * 2 + 3)
+			{
+				file << setprecision(9) << id << "," << turningAmount << "," << roadType << "," << roadDist << "," << turningPointList.front()->getLongtitude() << "," << turningPointList.front()->getLatitude() << "," << turningPointList.back()->getLongtitude() << "," << turningPointList.back()->getLatitude() << endl;
+				for (int i = 0; i < turningPointList.size(); i++)
+				{
+					turningPoint = turningPointList.at(i);
+					delete turningPoint;
+				}
+				vector<Node*>().swap(turningPointList);
+			}
+			pch = strtok(NULL, delim);
+		}
+
+	}
+	//_CrtDumpMemoryLeaks();
+}
+
+//記錄路段距離與路段所在區塊 .ISWnnreg
+void skylineModel::writeNodeRoadDistanceAndRegion(string inputDir_nn, string inputDir_index, string outputDir)
+{
+	int prev[MAX] = { 0 };
+	int dist[MAX] = { 0 };
+	//重讀檔案以找出Border Node
+	char line[SIZE];
+
+	ofstream file;
+	fstream fin_index;
+	fstream fin_nn;
+	outputDir = outputDir + ".ISWnnreg";
+	fin_nn.open(inputDir_nn, ios::in);
+	fin_index.open(inputDir_index, ios::in);
+	file.open(outputDir, ios::out | ios::binary);
+
+	int lineNumber = 0;
+	char *pch;
+	char *delim = ",";
+	int nodeId = 0, borderId = 0;
+	vector<Node*> nodeList;
+	vector<Region*> regionList;
+	vector<BorderNode*> borderNodeList;
+	int totalNode = 0, totalBorderNode = 0;
+
+	//cout << "read file " << inputDir<<endl;
+
+	while (fin_index.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string type;
+		string partitionType;
+		int num_region;
+		int roadRegionId;
+		double L_longtitude, R_longtitude, L_latitude, R_latitude;
+		double longtitude, latitude;
+		double dist;
+		//cout << "lineNumber " << lineNumber << endl;
+		Region* IswRegion = new Region();
+
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				num_region = strtod(pch, NULL);
+				IswRegion->setId(num_region);
+			}
+			else if (attributeFlag == 2)
+			{
+				L_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeLeft(L_longtitude);
+			}
+			else if (attributeFlag == 3)
+			{
+				L_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeBottom(L_latitude);
+			}
+			else if (attributeFlag == 4)
+			{
+				R_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeRight(R_longtitude);
+			}
+			else if (attributeFlag == 5)
+			{
+				R_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeTop(R_latitude);
+			}
+			pch = strtok(NULL, delim);
+		}
+		regionList.push_back(IswRegion);
+	}
+	//read .ISWnn
+	while (fin_nn.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string type;
+		string partitionType;
+		int part_x, part_y;
+		int roadRegionId;
+		double longtitude, latitude;
+		double dist;
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				//road id
+				file << pch << ",";
+			}
+			if (attributeFlag == 2)
+			{
+				file << pch << ",";
+				//turning point
+			}
+			if (attributeFlag == 3)
+			{
+				//start node type & end point type
+				file << pch << ",";
+				type = pch;
+			}
+			if (attributeFlag == 4)
+			{
+				//distance
+				dist = strtod(pch, NULL);
+				file << pch << ",";
+			}
+			if (attributeFlag == 5)
+			{
+				//start point x
+				longtitude = strtod(pch, NULL);
+				file << pch << ",";
+			}
+			if (attributeFlag == 6)
+			{
+				//start point y
+				file << pch << ",";
+				latitude = strtod(pch, NULL);
+				if (type == "nn" || type == "nb")
+				{
+					bool nodeExistFlag = false;
+					for (int index = 0; index < nodeList.size(); index++)
+					{
+						if (nodeList.at(index)->getLatitude() == latitude && nodeList.at(index)->getLongtitude() == longtitude)
+						{
+							nodeExistFlag = true;
+							file << nodeList.at(index)->getNodeName() << ",";
+							break;
+						}
+					}
+					if (!nodeExistFlag)
+					{
+						//
+						totalNode++;
+						Node* node = new Node(longtitude, latitude, nodeId++);
+						// check Node Region
+						roadRegionId = checkNodeRegion(regionList, node);
+						node->setNodeRegionId(roadRegionId);
+
+						nodeList.push_back(node);
+						file << node->getNodeName() << ",";
+					}
+				}
+				else
+				{
+					bool borderNodeExistFlag = false;
+					for (int index = 0; index < borderNodeList.size(); index++)
+					{
+						if (borderNodeList.at(index)->getLatitude() == latitude && borderNodeList.at(index)->getLongtitude() == longtitude)
+						{
+							borderNodeExistFlag = true;
+							file << borderNodeList.at(index)->getNodeName() << ",";
+							break;
+						}
+					}
+					if (!borderNodeExistFlag)
+					{
+						totalBorderNode++;
+						BorderNode* borderNode = new BorderNode(longtitude, latitude, nodeId++);
+						borderNodeList.push_back(borderNode);
+						file << borderNode->getNodeName() << ",";
+					}
+				}
+			}
+			if (attributeFlag == 7)
+			{
+				//end point x
+				longtitude = strtod(pch, NULL);
+				file << pch << ",";
+			}
+			if (attributeFlag == 8)
+			{
+				//end point y
+				file << pch << ",";
+				latitude = strtod(pch, NULL);
+				if (type == "nn" || type == "bn")
+				{
+					bool nodeExistFlag = false;
+					for (int index = 0; index < nodeList.size(); index++)
+					{
+						if (nodeList.at(index)->getLatitude() == latitude && nodeList.at(index)->getLongtitude() == longtitude)
+						{
+							nodeExistFlag = true;
+							file << nodeList.at(index)->getNodeName() << "," << nodeList.at(index)->getNodeRegionId();
+							break;
+						}
+					}
+					if (!nodeExistFlag)
+					{
+						totalNode++;
+						Node* node = new Node(longtitude, latitude, nodeId);
+						nodeId++;
+						// check Node Region
+						node->setNodeRegionId(checkNodeRegion(regionList, node));
+						// add to nodeList
+						nodeList.push_back(node);
+						file << node->getNodeName() << "," << node->getNodeRegionId();
+					}
+				}
+				else
+				{
+					bool borderNodeExistFlag = false;
+					for (int index = 0; index < borderNodeList.size(); index++)
+					{
+						if (borderNodeList.at(index)->getLatitude() == latitude && borderNodeList.at(index)->getLongtitude() == longtitude)
+						{
+							borderNodeExistFlag = true;
+							file << borderNodeList.at(index)->getNodeName() << "," << roadRegionId;
+							break;
+						}
+					}
+					if (!borderNodeExistFlag)
+					{
+						totalBorderNode++;
+						BorderNode* borderNode = new BorderNode(longtitude, latitude, nodeId++);
+						borderNodeList.push_back(borderNode);
+						file << borderNode->getNodeName() << "," << roadRegionId;
+					}
+
+				}
+				file << endl;
+			}
+			pch = strtok(NULL, delim);
+		}
+	}
+}
+//.iswnntable
+void skylineModel::ISWdijkstra(string inputDir_nnreg, string outputDir)
+{
+	//重讀檔案以找出Border Node
+	char line[SIZE];
+
+	fstream fin_nnreg;
+	outputDir = outputDir + ".ISWnntable";
+	fin_nnreg.open(inputDir_nnreg, ios::in);
+
+
+	int lineNumber = 0;
+	char *pch;
+	char *delim = ",";
+	int nodeId = 0, borderId = 0;
+	vector<string> nodeList;
+	vector<EData*> edgesList;
+	//vector<Region*> regionList;
+	//vector<BorderNode*> borderNodeList;
+	vector<double> partitionLongtitudeList;
+	vector<double> partitionLatitudeList;
+	int totalNode = 0, totalBorderNode = 0;
+
+	//cout << "read file " << inputDir << endl;
+
+	while (fin_nnreg.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string type;
+		string partitionType;
+		int part_x, part_y;
+		int roadRegionId;
+		string longtitude, latitude, nodeName1, nodeName2;
+		double dist;
+		lineNumber++;
+		//cout << "lineNumber " << lineNumber << endl;
+
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				//road id
+			}
+			if (attributeFlag == 2)
+			{
+				//turning point
+			}
+			if (attributeFlag == 3)
+			{
+				//start node type & end point type
+				type = pch;
+			}
+			if (attributeFlag == 4)
+			{
+				//distance
+				dist = strtod(pch, NULL);
+			}
+			if (attributeFlag == 5)
+			{
+				//start point x
+				longtitude = pch;
+			}
+			if (attributeFlag == 6)
+			{
+				//start point y
+				latitude = pch;
+			}
+			if (attributeFlag == 7)
+			{
+				nodeName1 = pch;
+				bool nodeExistFlag = false;
+				for (int index = 0; index < nodeList.size(); index++)
+				{
+					if (nodeList.at(index) == nodeName1)
+					{
+						nodeExistFlag = true;
+						break;
+					}
+				}
+				if (!nodeExistFlag)
+				{
+					nodeList.push_back(nodeName1);
+				}
+			}
+			if (attributeFlag == 8)
+			{
+				//end point y
+				longtitude = pch;
+			}
+			if (attributeFlag == 9)
+			{
+				//end point y
+				latitude = pch;
+			}
+			if (attributeFlag == 10)
+			{
+				nodeName2 = pch;
+				bool nodeExistFlag = false;
+				for (int index = 0; index < nodeList.size(); index++)
+				{
+					if (nodeList.at(index) == nodeName2)
+					{
+						nodeExistFlag = true;
+						break;
+					}
+				}
+				if (!nodeExistFlag)
+				{
+					nodeList.push_back(nodeName2);
+				}
+			}
+			if (attributeFlag == 11)
+			{
+				//end point y
+				roadRegionId = atoi(pch);
+			}
+			pch = strtok(NULL, delim);
+		}
+		if (nodeName1 != "")
+		{
+			edgesList.push_back(new EData(nodeName1, nodeName2, dist));
+		}
+
+	}
+
+	int prev[MAX] = { 0 };
+	int dist[MAX] = { 0 };
+
+	int vlen = nodeList.size();
+
+	int elen = edgesList.size();
+	//cout << vlen << " " << elen;
+	ListUDG* pG;
+
+	// 自定义"图"(输入矩阵队列)
+	//pG = new ListUDG();
+	// 采用已有的"图"
+	ofstream file;
+	file.open(outputDir, ios::trunc | ios::out);
+	file.close();
+	pG = new ListUDG(nodeList, vlen, edgesList, elen);
+	for (int i = 0; i < vlen; i++)
+	{
+		pG->dijkstra(i, prev, dist, outputDir);
+	}
+}
+//.iswoobjreg
+void skylineModel::writeISWOrderedIdRegionNodeData(string inputDir_objreg, string outputDir)
+{
+	char line[SIZE];
+
+	fstream fin_objreg;
+	ofstream file;
+	//	file.close();
+	outputDir = outputDir + ".ISWoobjreg";
+	file.open(outputDir, ios::out);
+	fin_objreg.open(inputDir_objreg, ios::in);
+	//cout << "inputDir:" << inputDir << endl;
+	//cout << "outputDir:" << outputDir << endl;
+
+	int lineNumber = 0;
+	char *pch;
+	char *delim = ",";
+	int nodeId = 0, borderId = 0;
+	vector<Node*> nodeList;
+	int totalNode = 0, totalBorderNode = 0;
+	vector<int> pos;
+	//cout << "read file " << inputDir << endl;
+
+	while (fin_objreg.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		lineNumber++;
+
+		Node* regNode;
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				regNode = new Node();
+				regNode->setNodeName(pch);
+				nodeList.push_back(regNode);
+			}
+			else if (attributeFlag == 2)
+			{
+				regNode->setLongtitude(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 3)
+			{
+				regNode->setLatitude(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 4)
+			{
+				regNode->setNodeRegionId(atoi(pch));
+			}
+
+			pch = strtok(NULL, delim);
+		}
+	}
+
+	//get node id & sort by id
+	delim = "_";
+	for (int i = 0; i < nodeList.size(); i++)
+	{
+		strcpy(line, nodeList.at(i)->getNodeName().c_str());
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 2)
+				nodeList.at(i)->setNodeId(atoi(pch));
+
+			pch = strtok(NULL, delim);
+		}
+	}
+	sort(nodeList.begin(), nodeList.end(), Node());
+
+	//write .oobjreg file
+	for (int i = 0; i < nodeList.size(); i++)
+	{
+		if (i > 0 && nodeList.at(i)->getNodeName() != nodeList.at(i - 1)->getNodeName())
+		{
+			file << setprecision(9) << nodeList.at(i)->getNodeName() << ",";
+			file << setprecision(9) << nodeList.at(i)->getLongtitude() << ",";
+			file << setprecision(9) << nodeList.at(i)->getLatitude() << ",";
+			file << setprecision(9) << nodeList.at(i)->getNodeRegionId() << endl;
+		}
+		else if (i == 0)
+		{
+			file << setprecision(9) << nodeList.at(i)->getNodeName() << ",";
+			file << setprecision(9) << nodeList.at(i)->getLongtitude() << ",";
+			file << setprecision(9) << nodeList.at(i)->getLatitude() << ",";
+			file << setprecision(9) << nodeList.at(i)->getNodeRegionId() << endl;
+		}
+	}
+}
+//iswobjreg
+void skylineModel::writeISWRegionAllNodeData(string inputDir_nreg, string inputDir_index, string outputDir)
+{
+	char line[SIZE];
+	int lineNumber = 0;
+	char *pch;
+	char *delim = ",";
+	fstream fin_nnreg, fin_index;
+	ofstream file;      //宣告fstream物件
+	fin_nnreg.open(inputDir_nreg, ios::in);
+	fin_index.open(inputDir_index, ios::in);
+	file.open(outputDir + ".ISWobjreg", ios::out);		//開啟檔案為輸出狀態，若檔案已存在則清除檔案內容重新寫入
+	clock_t nStart = clock(); // 開始時間
+
+	vector<double> partitionLongtitudeList;
+	vector<double> partitionLatitudeList;
+	vector<Region*> regionList;
+	vector<Node*> nodeList;
+
+	//以行讀取
+	while (fin_index.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string type;
+		string partitionType;
+		int num_region;
+		int roadRegionId;
+		double L_longtitude, R_longtitude, L_latitude, R_latitude;
+		double longtitude, latitude;
+		double dist;
+		//cout << "lineNumber " << lineNumber << endl;
+		Region* IswRegion = new Region();
+
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				num_region = strtod(pch, NULL);
+				IswRegion->setId(num_region);
+			}
+			else if (attributeFlag == 2)
+			{
+				L_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeLeft(L_longtitude);
+			}
+			else if (attributeFlag == 3)
+			{
+				L_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeBottom(L_latitude);
+			}
+			else if (attributeFlag == 4)
+			{
+				R_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeRight(R_longtitude);
+			}
+			else if (attributeFlag == 5)
+			{
+				R_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeTop(R_latitude);
+			}
+			pch = strtok(NULL, delim);
+		}
+		regionList.push_back(IswRegion);
+	}
+	fin_index.close();
+	while (fin_nnreg.getline(line, sizeof(line), '\n'))
+	{
+		Node* regionNode;
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string partitionType;
+		string roadType;
+		int part_x, part_y;
+		double roadId = 0, turningAmount = 0, roadDist = 0;
+		lineNumber++;
+		//get Border Node
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			//記錄ID, 轉折點, 起點
+			if (attributeFlag == 1)
+			{
+				roadId = strtod(pch, NULL);
+			}
+			else if (attributeFlag == 2)
+			{
+				turningAmount = strtod(pch, NULL);
+			}
+			else if (attributeFlag == 3)
+			{
+				roadType = pch;
+			}
+			else if (attributeFlag == 4)
+			{
+				roadDist = strtod(pch, NULL);
+			}
+
+			//將起點&終點交替放入register
+			//get Node
+			if (attributeFlag == 5 || attributeFlag == 8)
+			{
+				regionNode = new Node();
+				regionNode->setLongtitude(strtod(pch, NULL));
+				regionNode->setRoadIdList(roadId);
+			}
+			else if (attributeFlag == 6 || attributeFlag == 9)
+			{
+				regionNode->setLatitude(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 7 || attributeFlag == 10)
+			{
+				regionNode->setNodeName(pch);
+				bool nodeExistFlag = false;
+				for (int i = 0; i < nodeList.size(); i++)
+				{
+					if (regionNode->getNodeName() == nodeList.at(i)->getNodeName())
+					{
+						nodeExistFlag = true;
+						if (checkNodeRoadIdExist(nodeList.at(i), roadId) == false)
+							nodeList.at(i)->setRoadIdList(roadId);
+					}
+				}
+				if (nodeExistFlag == false)
+					nodeList.push_back(regionNode);
+			}
+			pch = strtok(NULL, delim);
+		}
+	}
+
+
+	//get Node Regions
+	for (int i = 0; i < nodeList.size(); i++)
+	{
+		for (int j = 0; j < regionList.size(); j++)
+		{
+			if (nodeList.at(i)->getLongtitude() >= regionList.at(j)->getLongtitudeLeft() && nodeList.at(i)->getLongtitude() <= regionList.at(j)->getLongtitudeRight() && nodeList.at(i)->getLatitude() >= regionList.at(j)->getLatitudeBottom() && nodeList.at(i)->getLatitude() <= regionList.at(j)->getLatitudeTop())
+			{
+				regionList.at(j)->setNodeList(nodeList.at(i));
+			}
+		}
+	}
+
+	//print node list
+	for (int i = 0; i < regionList.size(); i++)
+	{
+		vector<Node*> regionNList = regionList.at(i)->getNodeList();
+		for (int j = 0; j < regionNList.size(); j++)
+		{
+			file << setprecision(9) << regionNList.at(j)->getNodeName() << "," << regionNList.at(j)->getLongtitude() << "," << regionNList.at(j)->getLatitude() << "," << regionList.at(i)->getId() << ",";
+			for (int i = 0; i < regionNList.at(j)->getRoadIdList().size(); i++)
+			{
+				file << setprecision(9) << regionNList.at(j)->getRoadIdList().at(i);
+				if (i != regionNList.at(j)->getRoadIdList().size() - 1)
+					file << ",";
+			}
+			file << endl;
+		}
+	}
+	//_CrtDumpMemoryLeaks();
+}
+
+void skylineModel::writeIswSpotDist(string inputDir_index,string inputDir_nntable, string inputDir_spot, string inputDir_progress, string outputDir)
+{
+	fstream fin_nntable, fin_spot, fin_nntable2, fin_index, file_progress;
+	fin_nntable2.open(inputDir_nntable, ios::in);
+	fin_index.open(inputDir_index, ios::in);
+	int regionNum;
+	int lineNumber = 0;
+	char *pch;
+	char *delim = ",";
+	int nodeId = 0, borderId = 0;
+
+	vector<string> detectRegion;
+	vector<Region*> regionList;
+	vector<Node*>nodeList;
+	char line[SIZE];
+
+	//know region total number
+	while (fin_index.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string type;
+		string partitionType;
+		int num_region;
+		int roadRegionId;
+		double L_longtitude, R_longtitude, L_latitude, R_latitude;
+		double longtitude, latitude;
+		double dist;
+		//cout << "lineNumber " << lineNumber << endl;
+		Region* IswRegion = new Region();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				num_region = strtod(pch, NULL);
+				IswRegion->setId(num_region);
+			}
+			else if (attributeFlag == 2)
+			{
+				L_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeLeft(L_longtitude);
+			}
+			else if (attributeFlag == 3)
+			{
+				L_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeBottom(L_latitude);
+			}
+			else if (attributeFlag == 4)
+			{
+				R_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeRight(R_longtitude);
+			}
+			else if (attributeFlag == 5)
+			{
+				R_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeTop(R_latitude);
+			}
+			pch = strtok(NULL, delim);
+		}
+		regionList.push_back(IswRegion);
+	}
+	regionNum = regionList.size();
+	fin_index.close();
+	lineNumber = 0;
+
+	fin_spot.open(inputDir_spot, ios::in);
+	while (fin_spot.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		Node* regNode = new Node();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1){
+				regNode->setNodeName(pch);
+			}
+			else if (attributeFlag == 2){
+				regNode->setLongtitude(strtod(pch, NULL));
+				//longtitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 3){
+				regNode->setLatitude(strtod(pch, NULL));
+				//latitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 4){
+				regNode->setNodeRegionId(strtod(pch, NULL));
+			}
+			pch = strtok(NULL, delim);
+		}
+		nodeList.push_back(regNode);
+	}
+	fin_spot.close();
+
+
+	fstream file;
+	file.open(outputDir + ".ISWspotDist", ios::out);
+	char *bottomLine = "_";
+	for (int i = 0; i < nodeList.size(); i++)
+	{
+		strcpy(line, nodeList.at(i)->getNodeName().c_str());
+		pch = strtok(line, bottomLine);
+		int attributeFlag = 0;
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 2)
+				nodeList.at(i)->setNodeId(atoi(pch));
+
+			pch = strtok(NULL, bottomLine);
+		}
+	}
+	fin_nntable.open(inputDir_nntable, ios::in);
+	int lineNum = 0;
+	while (fin_nntable.getline(line, sizeof(line), '\n'))
+	{
+		for (int i = 0; i < nodeList.size(); i++)
+		{
+			if (nodeList.at(i)->getNodeId()==lineNum)
+			{
+				file << nodeList.at(i)->getNodeName() << ",";
+				pch = strtok(line, delim);
+				int attributeFlag = 0;
+
+				while (pch != NULL)
+				{
+					for (int j = 0; j < nodeList.size(); j++)
+					{
+						if (nodeList.at(j)->getNodeId()==attributeFlag-1)
+						{
+							file << pch;
+							if (j != nodeList.size()-1)
+							{
+								file << ",";
+							}
+						}
+					}
+					pch = strtok(NULL, delim);
+					attributeFlag++;
+				}
+				file << endl;
+			}
+		}
+		lineNum++;
+	}
+
+
+}
+void skylineModel::writeIswSpotToRegionMaxEuDist(string inputDir_index, string inputDir_spot, string outputDir)
+{
+	fstream  fin_spot, fin_index;
+	ofstream file;
+	int regionNum;
+	int lineNumber = 0;
+	char *pch;
+	char *delim = ",";
+	int nodeId = 0, borderId = 0;
+
+	vector<Region*> regionList;
+	vector<Node*>nodeList;
+	char line[SIZE];
+	fin_index.open(inputDir_index, ios::in);
+	while (fin_index.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string type;
+		string partitionType;
+		int num_region;
+		int roadRegionId;
+		double L_longtitude, R_longtitude, L_latitude, R_latitude;
+		double longtitude, latitude;
+		double dist;
+		//cout << "lineNumber " << lineNumber << endl;
+		Region* IswRegion = new Region();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				num_region = strtod(pch, NULL);
+				IswRegion->setId(num_region);
+			}
+			else if (attributeFlag == 2)
+			{
+				L_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeLeft(L_longtitude);
+			}
+			else if (attributeFlag == 3)
+			{
+				L_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeBottom(L_latitude);
+			}
+			else if (attributeFlag == 4)
+			{
+				R_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeRight(R_longtitude);
+			}
+			else if (attributeFlag == 5)
+			{
+				R_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeTop(R_latitude);
+			}
+			pch = strtok(NULL, delim);
+		}
+		regionList.push_back(IswRegion);
+	}
+	regionNum = regionList.size();
+	fin_index.close();
+
+	fin_spot.open(inputDir_spot, ios::in);
+	while (fin_spot.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		Node* regNode = new Node();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1){
+				regNode->setNodeName(pch);
+			}
+			else if (attributeFlag == 2){
+				regNode->setLongtitude(strtod(pch, NULL));
+				//longtitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 3){
+				regNode->setLatitude(strtod(pch, NULL));
+				//latitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 4){
+				regNode->setNodeRegionId(strtod(pch, NULL));
+			}
+			pch = strtok(NULL, delim);
+		}
+		nodeList.push_back(regNode);
+	}
+	fin_spot.close();
+
+	file.open(outputDir + ".ISWmaxEuDist", ios::out);
+	for (int i = 0; i < nodeList.size(); i++)
+	{
+		file << nodeList.at(i)->getNodeName() << ",";
+		for (int j = 0; j < regionNum; j++)
+		{
+			file << setprecision(9) << computeMaxSpotToRegionEuDist(nodeList.at(i), regionList.at(j));
+			if (j!=regionNum-1)
+			{
+				file << ",";
+			}
+		}
+		file << endl;
+	}
+	file.close();
+
+}
+void skylineModel::writeIswSpotToRegionMinEuDist(string inputDir_index, string inputDir_spot, string outputDir)
+{
+	fstream  fin_spot, fin_index;
+	ofstream file;
+	int regionNum;
+	int lineNumber = 0;
+	char *pch;
+	char *delim = ",";
+	int nodeId = 0, borderId = 0;
+
+	vector<Region*> regionList;
+	vector<Node*>nodeList;
+	char line[SIZE];
+	fin_index.open(inputDir_index, ios::in);
+	while (fin_index.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		string type;
+		string partitionType;
+		int num_region;
+		int roadRegionId;
+		double L_longtitude, R_longtitude, L_latitude, R_latitude;
+		double longtitude, latitude;
+		double dist;
+		//cout << "lineNumber " << lineNumber << endl;
+		Region* IswRegion = new Region();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1)
+			{
+				num_region = strtod(pch, NULL);
+				IswRegion->setId(num_region);
+			}
+			else if (attributeFlag == 2)
+			{
+				L_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeLeft(L_longtitude);
+			}
+			else if (attributeFlag == 3)
+			{
+				L_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeBottom(L_latitude);
+			}
+			else if (attributeFlag == 4)
+			{
+				R_longtitude = strtod(pch, NULL);
+				IswRegion->setLongtitudeRight(R_longtitude);
+			}
+			else if (attributeFlag == 5)
+			{
+				R_latitude = strtod(pch, NULL);
+				IswRegion->setLatitudeTop(R_latitude);
+			}
+			pch = strtok(NULL, delim);
+		}
+		regionList.push_back(IswRegion);
+	}
+	regionNum = regionList.size();
+	fin_index.close();
+
+	fin_spot.open(inputDir_spot, ios::in);
+	while (fin_spot.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		Node* regNode = new Node();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1){
+				regNode->setNodeName(pch);
+			}
+			else if (attributeFlag == 2){
+				regNode->setLongtitude(strtod(pch, NULL));
+				//longtitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 3){
+				regNode->setLatitude(strtod(pch, NULL));
+				//latitudeList.push_back(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 4){
+				regNode->setNodeRegionId(strtod(pch, NULL));
+			}
+			pch = strtok(NULL, delim);
+		}
+		nodeList.push_back(regNode);
+	}
+	fin_spot.close();
+
+	file.open(outputDir + ".ISWminEuDist", ios::out);
+	for (int i = 0; i < nodeList.size(); i++)
+	{
+		file << nodeList.at(i)->getNodeName() << ",";
+		for (int j = 0; j < regionNum; j++)
+		{
+			file << setprecision(9) << computeMinSpotToRegionEuDist(nodeList.at(i), regionList.at(j));
+			if (j != regionNum - 1)
+			{
+				file << ",";
+			}
+		}
+		file << endl;
+	}
+	file.close();
+}
+
+int skylineModel::computeMaxSpotToRegionEuDist(Node* node, Region* region)
+{
+	double leftBtmDist = 0, rightBtmDist = 0, leftTopDist = 0, rightTopDist = 0;
+
+	//ep(x1-x2)^2+(y1-y2)
+	leftBtmDist = computeSectionDistance(node->getLatitude(), node->getLongtitude(), region->getLatitudeBottom(), region->getLongtitudeLeft());
+	rightBtmDist = computeSectionDistance(node->getLatitude(), node->getLongtitude(), region->getLatitudeBottom(), region->getLongtitudeRight());
+	leftTopDist = computeSectionDistance(node->getLatitude(), node->getLongtitude(), region->getLatitudeTop(), region->getLongtitudeLeft());
+	rightTopDist = computeSectionDistance(node->getLatitude(), node->getLongtitude(), region->getLatitudeTop(), region->getLongtitudeRight());
+	
+	double maxDist = leftBtmDist;
+
+	if (maxDist < rightBtmDist)
+	{
+		maxDist = rightBtmDist;
+	}
+	if (maxDist < leftTopDist)
+	{
+		maxDist = leftTopDist;
+	}
+	if (maxDist < rightTopDist)
+	{
+		maxDist = rightTopDist;
+	}
+	return maxDist;
+}
+int skylineModel::computeMinSpotToRegionEuDist(Node* node, Region* region)
+{
+	double leftBtmDist = 0, rightBtmDist = 0, leftTopDist = 0, rightTopDist = 0;
+
+	//ep(x1-x2)^2+(y1-y2)
+	leftBtmDist = computeSectionDistance(node->getLatitude(), node->getLongtitude(), region->getLatitudeBottom(), region->getLongtitudeLeft());
+	rightBtmDist = computeSectionDistance(node->getLatitude(), node->getLongtitude(), region->getLatitudeBottom(), region->getLongtitudeRight());
+	leftTopDist = computeSectionDistance(node->getLatitude(), node->getLongtitude(), region->getLatitudeTop(), region->getLongtitudeLeft());
+	rightTopDist = computeSectionDistance(node->getLatitude(), node->getLongtitude(), region->getLatitudeTop(), region->getLongtitudeRight());
+
+	double minDist = leftBtmDist;
+
+	if (minDist > rightBtmDist)
+	{
+		minDist = rightBtmDist;
+	}
+	if (minDist > leftTopDist)
+	{
+		minDist = leftTopDist;
+	}
+	if (minDist > rightTopDist)
+	{
+		minDist = rightTopDist;
+	}
+
+	return minDist;
+}
+void skylineModel::writeIswSpotDistOrderbyRegion(string inputDir_spot, string inputDir_spotDist, string outputDir)
+{
+	int lineNumber = 0;
+	int regionNum;
+	int regDist;
+	vector<int> nodeLineNumberList;
+	vector<Region*> regionList;
+
+	vector<int> maxList;
+	char line[SIZE];
+	char *pch;
+	string str1;
+	char *delim = ",";
+
+	fstream fin_spotDist, fin_spot;
+	ofstream foutDir; //cout file .IswLamdaX (X = RegionNum) 
+	//get all spots
+	vector<Node*> spotList;
+	clock_t nStart = clock(); // 開始時間
+
+	fin_spot.open(inputDir_spot, ios::in);
+	while (fin_spot.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		Node* regNode = new Node();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1){
+				regNode->setNodeName(pch);
+			}
+			else if (attributeFlag == 2){
+				regNode->setLongtitude(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 3){
+				regNode->setLatitude(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 4){
+				regNode->setNodeRegionId(strtod(pch, NULL));
+			}
+			pch = strtok(NULL, delim);
+		}
+		spotList.push_back(regNode);
+	}
+	fin_spot.close();
+
+	vector<int> spotDistOrderbyRegionList(spotList.size());
+	fin_spotDist.open(inputDir_spotDist, ios::in);
+	foutDir.open(outputDir+".ISWspotDistOrder", ios::out);
+	lineNumber = 0;
+	while (fin_spotDist.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		while (pch != NULL)
+		{
+			if (attributeFlag > 0)
+			{
+				int spotRegionId = spotList.at(attributeFlag-1)->getNodeRegionId();
+				spotDistOrderbyRegionList.at(spotRegionId) = strtod(pch, NULL);
+			}
+			pch = strtok(NULL, delim);
+			attributeFlag++;
+		}
+		foutDir << spotList.at(lineNumber)->getNodeName() << ",";
+		for (int j = 0; j < spotDistOrderbyRegionList.size(); j++)
+		{
+			foutDir << spotDistOrderbyRegionList.at(j);
+			if (j != spotDistOrderbyRegionList.size() - 1)
+			{
+				foutDir << ",";
+			}
+		}
+		foutDir << endl;
+		lineNumber++;
+	}
+	foutDir.close();
+}
+//compute Isw Region to Region lamda(-,+)
+void skylineModel::writeIswAllRegionLamda(string inputDir_spotDist, string inputDir_spot, string inputDir_min, string inputDir_max, string outputDir)
+{
+	int lineNumber = 0;
+	int regionNum;
+	int regDist;
+	vector<int> nodeLineNumberList;
+	vector<int> maxList;
+	char line[SIZE];
+	char *pch;
+	string str1;
+	char *delim = ",";
+	fstream fin_spotDist, fin_spot, fin_min, fin_max;
+	ofstream foutDirMax, foutDirMin; //cout file .IswLamdaX (X = RegionNum) 
+
+	
+	//get all spots
+	vector<Node*> spotList;
+	clock_t nStart = clock(); // 開始時間
+	fin_spot.open(inputDir_spot, ios::in);
+	while (fin_spot.getline(line, sizeof(line), '\n'))
+	{
+		pch = strtok(line, delim);
+		int attributeFlag = 0;
+		Node* regNode = new Node();
+		while (pch != NULL)
+		{
+			attributeFlag++;
+			if (attributeFlag == 1){
+				regNode->setNodeName(pch);
+			}
+			else if (attributeFlag == 2){
+				regNode->setLongtitude(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 3){
+				regNode->setLatitude(strtod(pch, NULL));
+			}
+			else if (attributeFlag == 4){
+				regNode->setNodeRegionId(strtod(pch, NULL));
+			}
+			pch = strtok(NULL, delim);
+		}
+		spotList.push_back(regNode);
+	}
+	fin_spot.close();
+
+	//get region to region maxDist and minDist
+	lineNumber = 0;
+	foutDirMax.open(outputDir + ".ISWMaxlamda", ios::out);
+	foutDirMin.open(outputDir + ".ISWMinlamda", ios::out);
+	for (int i = 0; i < spotList.size(); i++)
+	{
+		vector<int> spotDistList;
+		vector<int> minList;
+		vector<int> maxList;
+		fin_spotDist.open(inputDir_spotDist, ios::in);
+		lineNumber = 0;
+		while (fin_spotDist.getline(line, sizeof(line), '\n'))
+		{
+			if (lineNumber == i)
+			{
+				pch = strtok(line, delim);
+				int attributeFlag = 0;
+				while (pch != NULL)
+				{
+					if (attributeFlag > 0)
+					{
+						spotDistList.push_back(strtod(pch, NULL));
+					}
+					pch = strtok(NULL, delim);
+					attributeFlag++;
+				}
+			}
+			lineNumber++;
+		}
+		fin_spotDist.close();
+
+		fin_min.open(inputDir_min, ios::in);
+		lineNumber = 0;
+		while (fin_min.getline(line, sizeof(line), '\n'))
+		{
+			if (lineNumber == i)
+			{
+				pch = strtok(line, delim);
+				int attributeFlag = 0;
+				while (pch != NULL)
+				{
+					if (attributeFlag > 0)
+					{
+						minList.push_back(strtod(pch, NULL));
+					}
+					pch = strtok(NULL, delim);
+					attributeFlag++;
+				}
+			}
+			lineNumber++;
+		}
+		fin_min.close();
+
+		fin_max.open(inputDir_max, ios::in);
+		lineNumber = 0;
+		while (fin_max.getline(line, sizeof(line), '\n'))
+		{
+			if (lineNumber == i)
+			{
+				pch = strtok(line, delim);
+				int attributeFlag = 0;
+				while (pch != NULL)
+				{
+					if (attributeFlag > 0)
+					{
+						maxList.push_back(strtod(pch, NULL));
+					}
+					pch = strtok(NULL, delim);
+					attributeFlag++;
+				}
+			}
+			lineNumber++;
+		}
+		fin_max.close();
+
+		foutDirMax << spotList.at(i)->getNodeName() << ",";
+		for (int j = 0; j < spotList.size(); j++)
+		{
+			double lamda = (double)spotDistList.at(j) / (double)minList.at(j);
+			foutDirMax << setprecision(9) << lamda;
+			if (j != spotList.size() - 1)
+			{
+				foutDirMax << ",";
+			}
+		}
+		foutDirMax << endl;
+
+		foutDirMin << spotList.at(i)->getNodeName() << ",";
+		for (int j = 0; j < spotList.size(); j++)
+		{
+			double lamda = (double)spotDistList.at(j) / (double)maxList.at(j);
+			foutDirMin << setprecision(9) << lamda;
+			if (j != spotList.size() - 1)
+			{
+				foutDirMin << ",";
+			}
+		}
+		foutDirMin << endl;
+	}
+	foutDirMax.close();
+	foutDirMin.close();
+
+	
+}
+
 void skylineModel::precomputationIntegrate_RNN()
 {
 	char line[SIZE];
@@ -4189,7 +6209,7 @@ void skylineModel::precomputationIntegrate_RNN()
 	outputFileDir = experimentalFolder + outputDir + "\\" + outputDir;
 
 	//建立資料夾
-	char a[50];		
+	char a[50];
 	char b[] = ".\\";
 	strcpy(a, b);
 	strcat(a, experimentalFolder.c_str());
@@ -4204,7 +6224,7 @@ void skylineModel::precomputationIntegrate_RNN()
 	{
 		progressStep = atoi(line);
 		if (progressStep != 0)
-			cout << "-----------Step " << progressStep << " loaded, continue steps after.-----------"<< endl;
+			cout << "-----------Step " << progressStep << " loaded, continue steps after.-----------" << endl;
 		break;
 	}
 	fgetprocess.close();
@@ -4221,7 +6241,7 @@ void skylineModel::precomputationIntegrate_RNN()
 	{
 		cout << endl << "Please enter CITY_ROAD.geo" << endl;
 		cin >> fileDir;//輸入檔案
-		copyOriginalData("experimentData\\"+fileDir, outputFileDir + ".geo");
+		copyOriginalData("experimentData\\" + fileDir, outputFileDir + ".geo");
 
 		cout << endl << "Please enter Grid Partition size" << endl;
 		//cout << "0. 1*1 " << endl;
@@ -4272,7 +6292,7 @@ void skylineModel::precomputationIntegrate_RNN()
 		END = clock();
 		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
 	}
- 	
+
 	//若執行完Step 1, 執行Step 2
 	if (progressStep < 2)
 	{
@@ -4416,7 +6436,7 @@ void skylineModel::precomputationIntegrate_RNN()
 		{
 			writeBNAndNSDist(outputFileDir + ".bntable", outputFileDir + ".objreg", outputFileDir + ".spot", outputFileDir + ".progress", outputFileDir, nsProcessCounter);
 		}
-		
+
 		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
 		file << "8" << endl;
 		file.close();
@@ -4500,6 +6520,89 @@ void skylineModel::precomputationIntegrate_RNN()
 		END = clock();
 		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
 	}
+	if (progressStep < 14)
+	{
+		clock_t START, END;
+		START = clock();
+		writekDTree(outputFileDir + ".spot", outputFileDir + ".geo", outputFileDir);//.ISWindex
+		writeISWNodeData(outputFileDir + ".geo", outputFileDir);//.ISWgeo
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "14" << endl;
+		file.close();
+		cout << "Process 14 Finished" << endl;
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 15)
+	{
+		clock_t START, END;
+		START = clock();
+		writeAllNodeRoadDistance(outputFileDir + ".ISWgeo", outputFileDir);//.ISWnn
+		writeNodeRoadDistanceAndRegion(outputFileDir + ".ISWnn", outputFileDir + ".ISWindex", outputFileDir);//.ISWnreg
+		ISWdijkstra(outputFileDir + ".ISWnnreg", outputFileDir);//.ISWnntable
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "15" << endl;
+		file.close();
+		cout << "Process 15 Finished" << endl;
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 16)
+	{
+		clock_t START, END;
+		START = clock();
+		writeISWRegionAllNodeData(outputFileDir + ".ISWnnreg", outputFileDir + ".ISWindex", outputFileDir);//.ISWobjreg
+		writeISWOrderedIdRegionNodeData(outputFileDir + ".ISWobjreg", outputFileDir);
+		writeIswSpotRegion(outputFileDir + ".ISWoobjreg", outputFileDir + ".spot", outputFileDir + ".ISWindex", outputFileDir);//.ISWspot
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "16" << endl;
+		file.close();
+		cout << "Process 16 Finished" << endl;
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+	if (progressStep < 17)
+	{
+		clock_t START, END;
+		START = clock();
+
+		fstream file;
+		writeIswSpotDist(outputFileDir + ".ISWindex", outputFileDir + ".ISWnntable", outputFileDir + ".ISWspot", outputFileDir + ".progress", outputFileDir);//.ISWnnDist
+		writeIswSpotDistOrderbyRegion(outputFileDir + ".ISWspot", outputFileDir + ".ISWspotDist", outputFileDir);
+		writeIswSpotToRegionMaxEuDist(outputFileDir + ".ISWindex", outputFileDir + ".ISWspot", outputFileDir);
+		writeIswSpotToRegionMinEuDist(outputFileDir + ".ISWindex", outputFileDir + ".ISWspot", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "17" << endl;
+		file.close();
+		cout << "Process 17 Finished" << endl;
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+
+	if (progressStep < 18)
+	{
+		clock_t START, END;
+		START = clock();
+		writeIswAllRegionLamda(outputFileDir + ".ISWspotDistOrder", outputFileDir + ".ISWspot", outputFileDir + ".ISWminEuDist", outputFileDir + ".ISWmaxEuDist", outputFileDir);
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "18" << endl;
+		file.close();
+		cout << "Process 18 Finished" << endl;
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
+
+	if (progressStep < 19)
+	{
+		clock_t START, END;
+		START = clock();
+		file.open(outputFileDir + ".progress", ios::trunc | ios::out);
+		file << "19" << endl;
+		file.close();
+		cout << "Process 19 Finished" << endl;
+		END = clock();
+		cout << (float)(END - START) / CLOCKS_PER_SEC << endl;
+	}
 
 	vector<int> candidateRegionIdList;
 	candidateRegionIdList = getBNNTableInNLayers(outputFileDir + ".blist", 0, 2);
@@ -4524,7 +6627,7 @@ void skylineModel::precomputationIntegrate_RNN()
 	//file.open(outputFileDir + "_" + to_string(queryAmountK) + ".npi", ios::app | ios::out);
 	//file << "BroadcastCycle, TuningTime, Latency" << endl;
 	//file.close();
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		ClientRNN* clientRNN = new ClientRNN();
 		clientRNN->computeRNNAnswer(outputFileDir + ".objreg", outputFileDir + ".index", outputFileDir + ".nbnntable", outputFileDir + ".bb", outputFileDir + ".blist", outputFileDir + ".maxdist", outputFileDir + ".bnns", outputFileDir + ".npirrmin", startRegionId);
@@ -4955,7 +7058,6 @@ void skylineModel::precomputationIntegrate()
 	//cout << "NPI latency time : " << npiclient->getLatencyDataSize() << endl;
 }
 
-
 void skylineModel::copyOriginalData(string inputDir, string outputDir)
 {
 	char line[SIZE];
@@ -4973,7 +7075,7 @@ void skylineModel::copyOriginalData(string inputDir, string outputDir)
 	while (fin.getline(line, sizeof(line), '\n'))
 	{
 		lineNumber++;
-	//	cout << "reading...";
+		//	cout << "reading...";
 	}
 	fin.close();
 
@@ -5089,7 +7191,7 @@ void skylineModel::writeBorderRoadDistanceAndRegion(string inputDir, string outp
 	vector<BorderNode*> borderNodeList;
 	vector<double> partitionLongtitudeList;
 	vector<double> partitionLatitudeList;
-	int totalNode = 0, totalBorderNode=0;
+	int totalNode = 0, totalBorderNode = 0;
 
 	//cout << "read file " << inputDir<<endl;
 
@@ -5338,12 +7440,12 @@ void skylineModel::dijkstra(string inputDir, string outputDir)
 		string partitionType;
 		int part_x, part_y;
 		int roadRegionId;
-		string longtitude, latitude,nodeName1,nodeName2;
+		string longtitude, latitude, nodeName1, nodeName2;
 		double dist;
 		lineNumber++;
 		//cout << "lineNumber " << lineNumber << endl;
 
-		if (lineNumber>=4)
+		if (lineNumber >= 4)
 		{
 			while (pch != NULL)
 			{
@@ -5396,7 +7498,7 @@ void skylineModel::dijkstra(string inputDir, string outputDir)
 				if (attributeFlag == 8)
 				{
 					//end point y
-					longtitude =pch;
+					longtitude = pch;
 				}
 				if (attributeFlag == 9)
 				{
@@ -5427,7 +7529,7 @@ void skylineModel::dijkstra(string inputDir, string outputDir)
 				}
 				pch = strtok(NULL, delim);
 			}
-			if (nodeName1!="")
+			if (nodeName1 != "")
 			{
 				edgesList.push_back(new EData(nodeName1, nodeName2, dist));
 			}
@@ -5439,7 +7541,7 @@ void skylineModel::dijkstra(string inputDir, string outputDir)
 	int dist[MAX] = { 0 };
 
 	int vlen = nodeList.size();
-	
+
 	int elen = edgesList.size();
 	//cout << vlen << " " << elen;
 	ListUDG* pG;
@@ -5456,7 +7558,6 @@ void skylineModel::dijkstra(string inputDir, string outputDir)
 		pG->dijkstra(i, prev, dist, outputDir);
 	}
 }
-
 
 vector<Region*> skylineModel::getRegionListByBound(vector<double> partitionLongtitudeList, vector<double> partitionLatitudeList)
 {
@@ -5612,7 +7713,7 @@ void skylineModel::writeBNAndNSDist(string inputDir1, string inputDir2, string i
 	int regionNum;
 	int lineNumber = 0;
 	int nodeId = 0, borderId = 0;
-	
+
 	int processStep;
 	file2.open(inputDir4, ios::in);
 	while (file2.getline(line, sizeof(line), '\n'))
